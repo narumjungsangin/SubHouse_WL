@@ -1,0 +1,290 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}{{ contract.house_name }} - SubHouse{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- 뒤로 가기 -->
+    <div class="mb-6">
+        <a href="{{ url_for('contract.search') }}"
+            class="flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            검색 결과로 돌아가기
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- 왼쪽 섹션: 사진 및 정보 -->
+        <div class="lg:col-span-2">
+            <!-- 매물 사진 -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+                {% if photos %}
+                <div class="relative">
+                    <!-- 메인 이미지 -->
+                    <div id="main-image" class="w-full h-96 bg-gray-100">
+                        <img src="{{ url_for('static', filename='uploads/' + photos[0].file_id) }}"
+                            alt="{{ contract.house_name }}" class="w-full h-full object-cover" />
+                    </div>
+
+                    <!-- 썸네일 갤러리 -->
+                    <div class="flex overflow-x-auto p-2 bg-white">
+                        {% for photo in photos %}
+                        <div class="thumbnail-item w-24 h-24 flex-shrink-0 mr-2 cursor-pointer hover:opacity-75 transition-opacity duration-300 {% if loop.index0 == 0 %}border-2 border-blue-500{% endif %}"
+                             data-image-url="{{ url_for('static', filename='uploads/' + photo.file_id) }}"
+                             onclick="showImage(this.dataset.imageUrl, this)">
+                            <img src="{{ url_for('static', filename='uploads/' + photo.file_id) }}" 
+                                 alt="Photo {{ loop.index }}" 
+                                 class="w-full h-full object-cover">
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                <div class="w-full h-96 bg-gray-200 flex items-center justify-center">
+                    <span class="text-gray-500">이미지가 없습니다</span>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- 매물 기본 정보 -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <h1 class="text-3xl font-bold mb-2">{{ contract.house_name }}</h1>
+                <p class="text-gray-600 mb-4">{{ contract.location }}</p>
+
+                <div class="flex flex-wrap gap-4 mb-6">
+                    <div class="flex items-center text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-blue-600" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                        <span>방 {{ contract.room_count }}개</span>
+                    </div>
+                    <div class="flex items-center text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-blue-600" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span>계약 기간: {{ contract.start_date.strftime('%Y-%m-%d') }} ~ {{
+                            contract.end_date.strftime('%Y-%m-%d') }}</span>
+                    </div>
+                    <div class="flex items-center text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-blue-600" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        <span>화장실 {{ contract.bathroom_count }}개</span>
+                    </div>
+                    <div class="flex items-center text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-blue-600" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        <span>면적: {{ contract.size_msq }} m²</span>
+                    </div>
+                    <div class="flex items-center text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-blue-600" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                        <span>건축년도: {{ contract.build_year }}</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center mb-6">
+                    <h2 class="text-2xl font-bold">${{ contract.monthly_rent_usd|int }}</h2>
+                </div>
+
+                <p class="text-gray-700 mb-6">{{ contract.description }}</p>
+
+                <!-- 룸메이트 허용 여부 -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-2">룸메이트 여부</h3>
+                    <p class="flex items-center">
+                        {% if contract.roommate_allowed %}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600 mr-2" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-green-600">룸메이트 가능</span>
+                        {% else %}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600 mr-2" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-red-600">룸메이트 불가</span>
+                        {% endif %}
+                    </p>
+                </div>
+
+                <!-- 매물 옵션 -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-2">매물 옵션</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        {% for option in options %}
+                        <div class="flex items-center bg-gray-50 p-2 rounded">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 mr-2"
+                                viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>{{ option.option_name }}</span>
+                        </div>
+                        {% else %}
+                        <p class="col-span-3 text-gray-500">등록된 옵션이 없습니다.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- 위치 정보 -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <h3 class="text-xl font-semibold mb-4">위치 정보</h3>
+                <div id="map" class="w-full h-80 rounded-lg mb-4" data-latitude="{{ contract.latitude }}"
+                    data-longitude="{{ contract.longitude }}" data-property-name="{{ contract.house_name }}"></div>
+                <p class="text-gray-700">{{ contract.location }}</p>
+            </div>
+        </div>
+
+        <!-- 오른쪽 섹션: 연락처 및 추천 매물 -->
+        <div class="lg:col-span-1">
+            <!-- 연락처 카드 -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8 sticky top-8">
+                <h3 class="text-xl font-semibold mb-4">연락처 정보</h3>
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mr-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-semibold">{{ contract.poster.username }}</p>
+                        <p class="text-sm text-gray-600">계약자</p>
+                    </div>
+                </div>
+
+                {% if current_user.is_authenticated %}
+                <div class="flex flex-col gap-3">
+                    <!-- 관심 등록 버튼 -->
+                    {% include 'contract/partials/like_button.html' with context %}
+
+                    <!-- 연락하기 버튼 -->
+                    <button
+                        class="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        연락하기
+                    </button>
+                </div>
+                {% else %}
+                <div class="text-center p-4 bg-gray-50 rounded-lg">
+                    <p class="mb-3 text-gray-600">관심 등록 및 연락하기를 사용하려면 로그인이 필요합니다.</p>
+                    <a href="{{ url_for('auth.login') }}"
+                        class="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-300">
+                        로그인하기
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- 유사한 매물 -->
+            {% if similar_contracts %}
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-xl font-semibold mb-4">유사한 매물</h3>
+                <div class="space-y-4">
+                    {% for similar in similar_contracts %}
+                    <a href="{{ url_for('contract.detail', contract_id=similar.id) }}"
+                        class="block hover:bg-gray-50 p-2 rounded-lg transition-colors duration-300">
+                        <div class="flex">
+                            <!-- 매물 사진 -->
+                            <div class="w-20 h-20 bg-gray-200 rounded overflow-hidden mr-3 flex-shrink-0">
+                                {% if similar.id in similar_photos %}
+                                <img src="{{ url_for('static', filename='uploads/' + similar_photos[similar.id]) }}"
+                                    alt="{{ similar.house_name }}" class="w-full h-full object-cover">
+                                {% else %}
+                                <div class="w-full h-full flex items-center justify-center">
+                                    <span class="text-xs text-gray-500">이미지 없음</span>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- 매물 정보 -->
+                            <div class="flex-grow">
+                                <h4 class="font-semibold truncate">{{ similar.house_name }}</h4>
+                                <p class="text-sm text-gray-600 truncate">{{ similar.location }}</p>
+                                <p class="text-blue-600">${{ similar.monthly_rent_usd|int }}</p>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- 스크립트 -->
+<script>
+    // 이미지 가져오기 및 표시 함수
+    function showImage(src, thumbnail) {
+        // 메인 이미지 업데이트
+        document.querySelector('#main-image img').src = src;
+
+        // 선택된 썸네일 표시
+        document.querySelectorAll('.flex-shrink-0').forEach(item => {
+            item.classList.remove('border-2', 'border-blue-500');
+        });
+        thumbnail.classList.add('border-2', 'border-blue-500');
+    }
+</script>
+
+<!-- Google Maps 관련 스크립트 -->
+<script>
+    // Google Maps 초기화 함수
+    function initMap() {
+        // HTML 데이터 속성에서 값 가져오기
+        const mapElement = document.getElementById('map');
+        const latitude = parseFloat(mapElement.dataset.latitude);
+        const longitude = parseFloat(mapElement.dataset.longitude);
+        const propertyName = mapElement.dataset.propertyName;
+        
+        // 지도 옵션 설정
+        const mapOptions = {
+            center: { lat: latitude, lng: longitude },
+            zoom: 15,
+            mapTypeControl: false,
+            streetViewControl: false,
+            fullscreenControl: true
+        };
+        
+        // 지도 생성
+        const map = new google.maps.Map(mapElement, mapOptions);
+        
+        // 마커 생성
+        const marker = new google.maps.Marker({
+            position: { lat: latitude, lng: longitude },
+            map: map,
+            title: propertyName
+        });
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap" defer></script>
+{% endblock %}

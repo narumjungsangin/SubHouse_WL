@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SubHouse{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+    
+    <!-- CSRF 토큰 - Flask-WTF 사용 -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.addEventListener('htmx:configRequest', function(evt) {
+                evt.detail.headers['X-CSRFToken'] = '{{ csrf_token() }}';
+            });
+        });
+    </script>
+    
+    <!-- 추가 스타일 -->
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+    </style>
+    
+    {% block head_extra %}{% endblock %}
+</head>
+<body class="min-h-screen bg-gray-50">
+    
+    <!-- 네비게이션 바 -->
+    {% include 'partials/navigation.html' %}
+    
+    <!-- 메인 콘텐츠 -->
+    <main class="container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- 푸터 -->
+    <footer class="bg-gray-800 text-white py-4 mt-auto">
+        <div class="container mx-auto px-4">
+            <p class="text-center">&copy; 2025 SubHouse. 모든 권리 보유.</p>
+        </div>
+    </footer>
+    
+    <!-- 추가 스크립트 -->
+    {% block scripts %}{% endblock %}
+</body>
+</html>

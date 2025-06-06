@@ -1,0 +1,190 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}SubHouse - 매물 등록{% endblock %}
+
+{% block head_extra %}
+<!-- 구글 맵스 API -->
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initMap" defer></script>
+<!-- 달력 라이브러리 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h1 class="text-2xl font-bold text-center mb-8">매물 등록</h1>
+    
+    <div class="mb-6">
+        <div class="flex justify-between mb-4">
+            <div class="w-1/3 text-center">
+                <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto">
+                    <span>1</span>
+                </div>
+                <p class="mt-2 text-sm font-medium text-blue-600">기본 정보</p>
+            </div>
+            <div class="w-1/3 text-center">
+                <div class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center mx-auto">
+                    <span>2</span>
+                </div>
+                <p class="mt-2 text-sm font-medium text-gray-500">상세 정보</p>
+            </div>
+            <div class="w-1/3 text-center">
+                <div class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center mx-auto">
+                    <span>3</span>
+                </div>
+                <p class="mt-2 text-sm font-medium text-gray-500">옵션 및 사진</p>
+            </div>
+        </div>
+        <div class="relative h-2 bg-gray-200 rounded-full">
+            <div class="absolute top-0 left-0 h-2 bg-blue-600 rounded-full" style="width: 33.33%"></div>
+        </div>
+    </div>
+    
+    <form id="createContractForm" hx-post="{{ url_for('contract.create_step1') }}" hx-target="#form-container" hx-swap="innerHTML" class="space-y-6">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="col-span-1 md:col-span-2">
+                <label for="house_name" class="block text-sm font-medium text-gray-700 mb-1">매물 이름 *</label>
+                <input type="text" id="house_name" name="house_name" required
+                       class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                       placeholder="예: Trailside Flats">
+            </div>
+            
+            <div class="col-span-1 md:col-span-2">
+                <label for="location" class="block text-sm font-medium text-gray-700 mb-1">위치 *</label>
+                <input type="text" id="location" name="location" required
+                       class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                       placeholder="주소를 입력하세요">
+                <input type="hidden" id="latitude" name="latitude">
+                <input type="hidden" id="longitude" name="longitude">
+                
+                <div id="map" class="h-60 mt-3 rounded-md border border-gray-300"></div>
+            </div>
+            
+            <div>
+                <label for="monthly_rent_usd" class="block text-sm font-medium text-gray-700 mb-1">월세 (USD) *</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">$</span>
+                    <input type="number" id="monthly_rent_usd" name="monthly_rent_usd" required min="0" step="0.01"
+                           class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                           placeholder="0.00">
+                </div>
+            </div>
+            
+            <div>
+                <label for="deposit_usd" class="block text-sm font-medium text-gray-700 mb-1">유틸 평균가격 (USD) </label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">$</span>
+                    <input type="number" id="deposit_usd" name="deposit_usd" min="0" step="0.01"
+                           class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                           placeholder="0.00">
+                </div>
+            </div>
+            
+            <!-- <div class="col-span-1 md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-1">거래 유형 *</label>
+                <div class="flex space-x-4 mt-1">
+                    <label class="inline-flex items-center">
+                        <input type="radio" name="transaction_type" value="월세" class="h-4 w-4 text-blue-600" checked>
+                        <span class="ml-2 text-gray-700">월세</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                        <input type="radio" name="transaction_type" value="전세" class="h-4 w-4 text-blue-600">
+                        <span class="ml-2 text-gray-700">전세</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                        <input type="radio" name="transaction_type" value="매매" class="h-4 w-4 text-blue-600">
+                        <span class="ml-2 text-gray-700">매매</span>
+                    </label>
+                </div>
+            </div> -->
+        </div>
+        
+        <div class="pt-4 flex justify-end">
+            <button type="submit" class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition duration-300">
+                다음 단계
+            </button>
+        </div>
+    </form>
+</div>
+
+<div id="form-container"></div>
+
+<script>
+    let map;
+    let marker;
+    let autocomplete;
+    
+    function initMap() {
+        //West Lafayette으로 초기화
+        const westLafayette = { lat: 40.4259, lng: -86.9081 };
+
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: westLafayette,
+            zoom: 13,
+            mapTypeControl: false,
+            streetViewControl: false
+        });
+
+        marker = new google.maps.Marker({
+            position: westLafayette,
+            map: map,
+            draggable: true
+        });
+
+        
+        // 마커 드래그 이벤트
+        google.maps.event.addListener(marker, 'dragend', function() {
+            const position = marker.getPosition();
+            document.getElementById('latitude').value = position.lat();
+            document.getElementById('longitude').value = position.lng();
+            
+            // 역지오코딩으로 주소 가져오기
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ location: position }, function(results, status) {
+                if (status === 'OK' && results[0]) {
+                    document.getElementById('location').value = results[0].formatted_address;
+                }
+            });
+        });
+        
+        // 주소 자동완성
+        const input = document.getElementById('location');
+        autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.setFields(['address_components', 'geometry', 'name']);
+        
+        autocomplete.addListener('place_changed', function() {
+            const place = autocomplete.getPlace();
+            
+            if (!place.geometry) {
+                return;
+            }
+            
+            // 지도 중심 및 마커 위치 변경
+            map.setCenter(place.geometry.location);
+            marker.setPosition(place.geometry.location);
+            
+            // 좌표 저장
+            document.getElementById('latitude').value = place.geometry.location.lat();
+            document.getElementById('longitude').value = place.geometry.location.lng();
+        });
+        
+        // 지도 클릭 이벤트
+        google.maps.event.addListener(map, 'click', function(event) {
+            marker.setPosition(event.latLng);
+            document.getElementById('latitude').value = event.latLng.lat();
+            document.getElementById('longitude').value = event.latLng.lng();
+            
+            // 역지오코딩으로 주소 가져오기
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ location: event.latLng }, function(results, status) {
+                if (status === 'OK' && results[0]) {
+                    document.getElementById('location').value = results[0].formatted_address;
+                }
+            });
+        });
+    }
+</script>
+{% endblock %}

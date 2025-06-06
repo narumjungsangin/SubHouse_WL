@@ -1,0 +1,57 @@
+<nav class="bg-white shadow-md">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center h-16">
+            <!-- 로고 -->
+            <div class="flex-shrink-0">
+                <a href="{{ url_for('main.index') }}" class="text-blue-600 font-bold text-xl">SubHouse</a>
+            </div>
+            
+            <!-- 데스크톱 메뉴 -->
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="{{ url_for('main.index') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">홈</a>
+                <a href="{{ url_for('contract.create') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">매물 등록</a>
+                <a href="#" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">매물 찾기</a>
+            </div>
+            
+            <!-- 사용자 메뉴 -->
+            <div class="hidden md:flex items-center">
+                <!-- 로그인 상태에 따른 조건부 렌더링 -->
+                {% if current_user.is_authenticated %}
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" class="flex items-center text-gray-700 hover:text-blue-600">
+                            <span class="mr-2">{{ current_user.username }}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">내 계정</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">관심 집</a>
+                            <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">로그아웃</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{{ url_for('auth.google_login') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                        Google로 시작하기
+                    </a>
+                {% endif %}
+            </div>
+            
+            <!-- 모바일 메뉴 버튼 -->
+            <div class="flex md:hidden">
+                <button type="button" class="mobile-menu-button text-gray-700 hover:text-blue-600"
+                        hx-get="{{ url_for('main.mobile_menu') }}" 
+                        hx-target="#mobile-menu-container" 
+                        hx-swap="innerHTML">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 모바일 메뉴 컨테이너 -->
+    <div id="mobile-menu-container" class="md:hidden"></div>
+</nav>

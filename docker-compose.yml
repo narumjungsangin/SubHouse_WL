@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: subhouse_app
+    restart: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./:/app
+      - data-volume:/data
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
+      - SECRET_KEY=${SECRET_KEY:-dev_secret_key}
+      - GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}
+    command: flask run --host=0.0.0.0
+
+volumes:
+  data-volume:
+    name: subhouse_data

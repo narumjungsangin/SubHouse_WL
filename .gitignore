@@ -1,0 +1,14 @@
+.env
+.pylintrc
+database.db.backup
+instance/
+database.db
+.coverage
+htmlcov/
+migrations/
+memory/
+tasks.json
+__pycache__
+/uploads
+/.venv
+/.windsurf
