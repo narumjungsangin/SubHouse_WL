@@ -1,0 +1,80 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}SubHouse - 당신의 이상적인 집을 찾아보세요{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">당신의 이상적인 집을 찾아보세요</h1>
+        <p class="text-xl text-gray-600">해당 프로젝트는 6월 3일 하루안에 프로젝트 완성시키기 프로젝트에서 진행된 결과물로,
+            MVP 단계만 구현되어있습니다.</p>
+                <br>
+              <style>
+                body {
+                  font-family: Arial, sans-serif;
+                  background: #f5f5f5;
+                  margin: 40px;
+                }
+                .card-container {
+                  display: flex;
+                  flex-wrap: wrap;
+                  gap: 20px;
+                }
+                .card {
+                  background: white;
+                  border-radius: 12px;
+                  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+                  padding: 20px;
+                  width: 300px;
+                }
+                .card h2 {
+                  margin-top: 0;
+                }
+                .github-link {
+                  color: #0366d6;
+                  text-decoration: none;
+                }
+                .features {
+                  margin-top: 10px;
+                }
+                .features li {
+                  margin-bottom: 5px;
+                }
+              </style>
+            
+            <div class="flex justify-center flex-wrap gap-5">
+                <div class="card">
+                  <h2>이서형</h2>
+                  <p><strong>깃허브:</strong> <a class="github-link" href="https://github.com/seanjr2847" target="_blank">github.com/seanjr2847</a></p>
+                  <p><strong>직책:</strong> 개발</p>
+                  <div class="features">
+                    <strong>구현 기능:</strong>
+                    <ul>
+                      <li>로그인/회원가입</li>
+                      <li>홈페이지 UI</li>
+                      <li>API 연동</li>
+                    </ul>
+                  </div>
+                </div>
+              
+                <div class="card">
+                  <h2>윤준수</h2>
+                  <p><strong>깃허브:</strong> <a class="github-link" href="https://github.com/narumjungsangin" target="_blank">github.com/narumjungsangin</a></p>
+                  <p><strong>직책:</strong> 기획</p>
+                  <div class="features">
+                    <strong>구현 기능:</strong>
+                    <ul>
+                      <li>DB 설계 및 구축</li>
+                      <li>사후관리</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+            
+
+    </div>
+
+
+</div>
+{% endblock %}

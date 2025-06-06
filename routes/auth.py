@@ -111,57 +111,60 @@ def google_callback():
         # ID 토큰 파싱 대신 userinfo 엔드포인트 사용
         userinfo_endpoint = "https://www.googleapis.com/oauth2/v3/userinfo"
         current_app.logger.info(f"Requesting user info from: {userinfo_endpoint}")
-        resp = oauth.google.get(userinfo_endpoint, token=token)
-        user_info = resp.json()
-        current_app.logger.info(f"User info response: {user_info}")
-        
-        google_id = user_info.get("sub")
+
+        # userinfo 엔드포인트 호출
+        response = requests.get(userinfo_endpoint, headers={
+            'Authorization': f'Bearer {token["access_token"]}'
+        })
+        response.raise_for_status()
+        user_info = response.json()
+
+        # 사용자 정보 로깅
+        current_app.logger.info(f"User info received: {json.dumps(user_info, indent=2)}")
+
+        # 사용자 정보에서 이메일과 이름 추출
         email = user_info.get("email")
-        name = user_info.get("name", email.split("@")[0] if email else "사용자")
-        profile_picture = user_info.get("picture")
+        name = user_info.get("name")
+        picture = user_info.get("picture")
 
-        current_app.logger.info(
-            f"Google user info received: email={email}, name={name}"
-        )
+        # 사용자 정보 로깅
+        current_app.logger.info(f"User email: {email}, name: {name}")
 
-        # 기존 사용자 검색 또는 새 사용자 생성
-        user = User.query.filter_by(google_id=google_id).first()
+        # 사용자 정보 저장
+        user = User.query.filter_by(email=email).first()
         if not user:
-            user = User.query.filter_by(email=email).first()
-            if user:
-                # 기존 이메일이 있는 경우 Google ID 업데이트
-                current_app.logger.info(
-                    f"Updating existing user with Google ID: {email}"
-                )
-                user.google_id = google_id
-                user.profile_picture = profile_picture
-            else:
-                # 새 사용자 생성
-                current_app.logger.info(f"Creating new user: {email}")
-                user = User(
-                    google_id=google_id,
-                    email=email,
-                    name=name,
-                    profile_picture=profile_picture,
-                    account_status="active",
-                )
-                db.session.add(user)
+            user = User(
+                email=email,
+                name=name,
+                profile_picture=picture,
+                google_id=user_info.get("sub")
+            )
+            db.session.add(user)
             db.session.commit()
+            current_app.logger.info(f"New user created: {email}")
         else:
-            current_app.logger.info(f"Existing user found: {email}")
+            current_app.logger.info(f"Existing user logged in: {email}")
 
-        # 사용자 로그인
+        # 로그인 처리
         login_user(user)
-        current_app.logger.info(f"User logged in: {user.name} (id: {user.id})")
+        current_app.logger.info(f"User logged in successfully: {email}")
 
-        # HTMX 요청인 경우 부분 응답
-        if request.headers.get("HX-Request"):
-            current_app.logger.info("Returning HTMX partial response")
-            return render_template("partials/user_nav.html")
+        # next URL 처리
+        # 쿼리 파라미터로 전달된 next URL 확인
+        next_url = request.args.get("next")
+        if next_url:
+            current_app.logger.info(f"Next URL from query parameter: {next_url}")
+            # next URL이 세션에 저장되어 있는지 확인
+            session_next = session.get("next")
+            if session_next:
+                current_app.logger.info(f"Session next URL: {session_next}")
+                # 쿼리 파라미터로 전달된 URL이 더 우선
+                session["next"] = next_url
+                current_app.logger.info(f"Updated session next URL to: {next_url}")
 
-        # 원래 요청한 페이지가 있으면 해당 페이지로, 없으면 메인 페이지로
-        # 세션에서 next 값 가져오기 전에 로깅
-        current_app.logger.info(f"Session contents before redirect: {session}")
+        # 세션에서 next URL 가져오기
+        next_page = session.get("next")
+        current_app.logger.info(f"Retrieved next URL from session: {next_page}")
 
         next_page = None
         if "next" in session:
@@ -201,3 +204,9 @@ def logout():
 def profile():
     """사용자 프로필 페이지"""
     return render_template("auth/profile.html", user=current_user)
+
+
+@auth_bp.route("/about")
+def about():
+    """회사소개 페이지"""
+    return render_template("aboutUs.html")
