@@ -1,0 +1,174 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}매물 수정 - SubHouse{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-6">
+        <a href="{{ url_for('contract.detail', contract_id=contract.id) }}"
+            class="flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            매물 상세로 돌아가기
+        </a>
+    </div>
+
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-2xl font-bold mb-6">매물 수정</h1>
+
+        <form method="POST" action="{{ url_for('contract.edit_contract', contract_id=contract.id) }}" 
+              enctype="multipart/form-data" class="space-y-6">
+            {{ form.csrf_token }}
+            <!-- 기본 정보 섹션 -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4">기본 정보</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="house_name" class="block text-sm font-medium text-gray-700 mb-1">건물명</label>
+                        <input type="text" id="house_name" name="house_name" 
+                               value="{{ contract.house_name }}" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label for="location" class="block text-sm font-medium text-gray-700 mb-1">위치</label>
+                        <input type="text" id="location" name="location" 
+                               value="{{ contract.location }}" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label for="monthly_rent_usd" class="block text-sm font-medium text-gray-700 mb-1">월세 (USD)</label>
+                        <input type="number" id="monthly_rent_usd" name="monthly_rent_usd" 
+                               value="{{ contract.monthly_rent_usd }}" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label for="deposit_usd" class="block text-sm font-medium text-gray-700 mb-1">보증금 (USD)</label>
+                        <input type="number" id="deposit_usd" name="deposit_usd" 
+                               value="{{ contract.deposit_usd }}" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 상세 정보 섹션 -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4">상세 정보</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="room_count" class="block text-sm font-medium text-gray-700 mb-1">방 수</label>
+                        <input type="number" id="room_count" name="room_count" 
+                               value="{{ contract.room_count }}" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label for="bathroom_count" class="block text-sm font-medium text-gray-700 mb-1">화장실 수</label>
+                        <input type="number" id="bathroom_count" name="bathroom_count" 
+                               value="{{ contract.bathroom_count }}" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label for="build_year" class="block text-sm font-medium text-gray-700 mb-1">건축년도</label>
+                        <input type="number" id="build_year" name="build_year" 
+                               value="{{ contract.build_year }}" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label for="size_sqft" class="block text-sm font-medium text-gray-700 mb-1">면적 (평방피트)</label>
+                        <input type="number" id="size_sqft" name="size_sqft" 
+                               value="{{ contract.size_sqft }}" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" id="roommate_allowed" name="roommate_allowed" 
+                               {% if contract.roommate_allowed %}checked{% endif %}
+                               class="mr-2">
+                        <span class="text-gray-700">룸메이트 허용</span>
+                    </label>
+                </div>
+
+                <div class="mt-4">
+                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">설명</label>
+                    <textarea id="description" name="description" rows="4"
+                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">{{ contract.description }}</textarea>
+                </div>
+            </div>
+
+            <!-- 옵션 섹션 -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4">옵션</h2>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    {% for option in ['에어컨', '냉장고', '세탁기', 'TV', '인터넷', '와이파이', '에스프레소 머신', '세차장', '수영장', '짐보관소'] %}
+                    <div class="flex items-center">
+                        <input type="checkbox" id="option_{{ loop.index }}" name="options" value="{{ option }}"
+                               {% if option in contract.options %}checked{% endif %}
+                               class="mr-2">
+                        <label for="option_{{ loop.index }}" class="text-gray-700">{{ option }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- 사진 업로드 섹션 -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4">사진 업로드</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">사진 추가</label>
+                        <input type="file" id="photos" name="photos" multiple
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 작성자 정보 섹션 -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4">작성자 정보</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="seller_kakao" class="block text-sm font-medium text-gray-700 mb-1">카카오톡 ID</label>
+                        <input type="text" id="seller_kakao" name="seller_kakao" 
+                               value="{{ contract.seller_kakao }}" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label for="seller_instagram" class="block text-sm font-medium text-gray-700 mb-1">인스타그램 ID</label>
+                        <input type="text" id="seller_instagram" name="seller_instagram" 
+                               value="{{ contract.seller_instagram }}" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label for="seller_phone" class="block text-sm font-medium text-gray-700 mb-1">전화번호</label>
+                        <input type="tel" id="seller_phone" name="seller_phone" 
+                               value="{{ contract.seller_phone }}" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end mt-8">
+                <button type="submit"
+                        class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-300">
+                    수정하기
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,15 +1,42 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, current_app, abort
 from flask_login import login_required, current_user
+from flask_wtf import FlaskForm
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import os
 import uuid
 from sqlalchemy import or_, and_, desc, func
+from wtforms import StringField, IntegerField, FloatField, BooleanField, DateField, TextAreaField
+from wtforms.validators import DataRequired, Optional
 from models import db
 from models.contract import Contract
-from models.room_option import RoomOption
 from models.contract_photo import ContractPhoto
+from models.room_option import RoomOption
 from models.like import Like
+
+class ContractForm(FlaskForm):
+    pass  # CSRF 토큰을 자동으로 처리
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # 기본 필드 추가
+        self.fields = {
+            'house_name': StringField('건물명', validators=[Optional()]),
+            'location': StringField('위치', validators=[DataRequired()]),
+            'latitude': FloatField('위도', validators=[DataRequired()]),
+            'longitude': FloatField('경도', validators=[DataRequired()]),
+            'room_count': IntegerField('방 개수', validators=[DataRequired()]),
+            'bathroom_count': FloatField('화장실 개수', validators=[DataRequired()]),
+            'roommate_allowed': BooleanField('룸메이트 허용'),
+            'start_date': DateField('계약 시작일', format='%Y-%m-%d', validators=[Optional()]),
+            'end_date': DateField('계약 종료일', format='%Y-%m-%d', validators=[Optional()]),
+            'monthly_rent_usd': FloatField('월세 (달러)', validators=[DataRequired()]),
+            'deposit_usd': FloatField('보증금 (달러)', validators=[Optional()]),
+            'description': TextAreaField('설명', validators=[Optional()]),
+            'seller_kakao': StringField('카카오톡 아이디', validators=[Optional()]),
+            'seller_phone': StringField('전화번호', validators=[Optional()]),
+            'seller_instagram': StringField('인스타그램 아이디', validators=[Optional()])
+        }
 
 contract_bp = Blueprint('contract', __name__, url_prefix='/contract')
 
@@ -42,6 +69,9 @@ def create_step1():
             'monthly_rent_usd': request.form.get('monthly_rent_usd', ''),
             'deposit_usd': request.form.get('deposit_usd', ''),
             'transaction_type': request.form.get('transaction_type', ''),
+            'seller_kakao': request.form.get('seller_kakao', ''),
+            'seller_phone': request.form.get('seller_phone', ''),
+            'seller_instagram': request.form.get('seller_instagram', '')
         }
         return render_template('contract/create_step2.html', data=data)
     return redirect(url_for('contract.create'))
@@ -67,6 +97,9 @@ def create_step2():
             'size_sqft': request.form.get('size_sqft', ''),
             'start_date': request.form.get('start_date', ''),
             'end_date': request.form.get('end_date', ''),
+            'seller_kakao': request.form.get('seller_kakao', ''),
+            'seller_phone': request.form.get('seller_phone', ''),
+            'seller_instagram': request.form.get('seller_instagram', '')
         }
         return render_template('contract/create_step3.html', data=data)
     return redirect(url_for('contract.create'))
@@ -115,6 +148,11 @@ def submit():
         roommate_allowed = 'roommate_allowed' in request.form
         size_sqft = float(request.form.get('size_sqft')) if request.form.get('size_sqft') else None
         
+        # 판매자 정보
+        seller_kakao = request.form.get('seller_kakao', '')
+        seller_instagram = request.form.get('seller_instagram', '')
+        seller_phone = request.form.get('seller_phone', '')
+        
         start_date_str = request.form.get('start_date')
         end_date_str = request.form.get('end_date')
         
@@ -139,7 +177,10 @@ def submit():
             end_date=end_date,
             description=description,
             posted_by=current_user.id,
-            contract_status='active'
+            contract_status='active',
+            seller_kakao=seller_kakao,
+            seller_instagram=seller_instagram,
+            seller_phone=seller_phone
         )
         
         db.session.add(new_contract)
@@ -373,6 +414,9 @@ def detail(contract_id):
     # 매물 옵션
     options = RoomOption.query.filter_by(contract_id=contract.id).all()
     
+    # 작성자 정보 가져오기
+    poster = contract.poster
+    
     # 로그인 상태에 따라 관심 여부 확인
     is_liked = False
     if current_user.is_authenticated:
@@ -396,13 +440,18 @@ def detail(contract_id):
         if photo:
             similar_photos[similar.id] = photo.file_id
     
+    # 작성자 여부 확인
+    is_owner = current_user.is_authenticated and contract.posted_by == current_user.id
+    
     return render_template('contract/detail.html',
                            contract=contract,
                            photos=photos,
                            options=options,
                            is_liked=is_liked,
                            similar_contracts=similar_contracts,
-                           similar_photos=similar_photos)
+                           similar_photos=similar_photos,
+                           poster=poster,
+                           is_owner=is_owner)
 
 
 @contract_bp.route('/like/<int:contract_id>', methods=['POST'])
@@ -440,6 +489,168 @@ def toggle_like(contract_id):
         'is_liked': is_liked,
         'message': message
     })
+
+@contract_bp.route('/delete/<int:contract_id>', methods=['GET'])
+@login_required
+def confirm_delete(contract_id):
+    """매물 삭제 확인 페이지"""
+    contract = Contract.query.get_or_404(contract_id)
+    
+    # 작성자만 접근 가능
+    if contract.posted_by != current_user.id:
+        abort(403)
+    
+    form = ContractForm()
+    return render_template('contract/delete.html', contract=contract, form=form)
+
+@contract_bp.route('/delete/<int:contract_id>/confirm', methods=['POST'])
+@login_required
+def delete_contract(contract_id):
+    """매물 삭제 처리"""
+    contract = Contract.query.get_or_404(contract_id)
+    
+    # 작성자만 삭제 가능
+    if contract.posted_by != current_user.id:
+        abort(403)
+    
+    form = ContractForm()
+    if form.validate_on_submit():
+        # 매물 상태를 비활성화로 변경
+        contract.contract_status = 'cancelled'
+        contract.is_deleted = True
+        
+        # 관련 데이터 삭제
+        ContractPhoto.query.filter_by(contract_id=contract.id).delete()
+        RoomOption.query.filter_by(contract_id=contract.id).delete()
+        Like.query.filter_by(contract_id=contract.id).delete()
+        
+        db.session.commit()
+        
+        flash('매물이 삭제되었습니다.', 'success')
+        return redirect(url_for('main.index'))
+
+@contract_bp.route('/edit/<int:contract_id>', methods=['GET', 'POST'])
+@login_required
+def edit_contract(contract_id):
+    """매물 수정"""
+    contract = Contract.query.get_or_404(contract_id)
+    
+    # 작성자만 수정 가능
+    if contract.posted_by != current_user.id:
+        abort(403)
+    
+    # 매물 옵션 가져오기
+    options = RoomOption.query.filter_by(contract_id=contract.id).all()
+    selected_options = [option.option_name for option in options]
+    
+    form = ContractForm()
+    if form.validate_on_submit():
+        # 기본 정보 업데이트
+        contract.house_name = request.form.get('house_name')
+        contract.location = request.form.get('location')
+        contract.latitude = request.form.get('latitude')
+        contract.longitude = request.form.get('longitude')
+        
+        # 숫자 필드 처리
+        def safe_convert(value, converter):
+            if not value:
+                return None
+            try:
+                return converter(value)
+            except ValueError:
+                return None
+        
+        contract.monthly_rent_usd = safe_convert(request.form.get('monthly_rent_usd'), float)
+        contract.deposit_usd = safe_convert(request.form.get('deposit_usd'), float)
+        contract.room_count = safe_convert(request.form.get('room_count'), int)
+        contract.bathroom_count = safe_convert(request.form.get('bathroom_count'), float)
+        contract.build_year = safe_convert(request.form.get('build_year'), int)
+        contract.size_sqft = safe_convert(request.form.get('size_sqft'), float)
+        
+        contract.roommate_allowed = 'roommate_allowed' in request.form
+        
+        # 날짜 업데이트
+        start_date_str = request.form.get('start_date')
+        end_date_str = request.form.get('end_date')
+        
+        contract.start_date = datetime.strptime(start_date_str, '%Y-%m-%d') if start_date_str else None
+        contract.end_date = datetime.strptime(end_date_str, '%Y-%m-%d') if end_date_str else None
+        
+        # 설명 업데이트
+        contract.description = request.form.get('description')
+        
+        # 옵션 업데이트
+        existing_options = RoomOption.query.filter_by(contract_id=contract.id).all()
+        for option in existing_options:
+            db.session.delete(option)
+        
+        new_options = request.form.getlist('options')
+        for option in new_options:
+            new_option = RoomOption(
+                contract_id=contract.id,
+                option_name=option
+            )
+            db.session.add(new_option)
+        
+        # 수정 정보 업데이트
+        contract.modified_by = current_user.id
+        contract.modified_at = datetime.utcnow()
+        
+        db.session.commit()
+        
+        flash('매물이 수정되었습니다.', 'success')
+        return redirect(url_for('contract.detail', contract_id=contract.id))
+        # 기본 정보 업데이트
+        contract.house_name = request.form.get('house_name')
+        contract.location = request.form.get('location')
+        contract.latitude = request.form.get('latitude')
+        contract.longitude = request.form.get('longitude')
+        contract.monthly_rent_usd = float(request.form.get('monthly_rent_usd'))
+        contract.deposit_usd = float(request.form.get('deposit_usd')) if request.form.get('deposit_usd') else None
+        contract.room_count = int(request.form.get('room_count'))
+        contract.bathroom_count = float(request.form.get('bathroom_count'))
+        contract.build_year = int(request.form.get('build_year'))
+        contract.roommate_allowed = 'roommate_allowed' in request.form
+        contract.size_sqft = float(request.form.get('size_sqft'))
+        
+        # 날짜 업데이트
+        start_date_str = request.form.get('start_date')
+        end_date_str = request.form.get('end_date')
+        
+        contract.start_date = datetime.strptime(start_date_str, '%Y-%m-%d') if start_date_str else None
+        contract.end_date = datetime.strptime(end_date_str, '%Y-%m-%d') if end_date_str else None
+        
+        # 설명 업데이트
+        contract.description = request.form.get('description')
+        
+        # 옵션 업데이트
+        existing_options = RoomOption.query.filter_by(contract_id=contract.id).all()
+        for option in existing_options:
+            db.session.delete(option)
+        
+        new_options = request.form.getlist('options')
+        for option in new_options:
+            new_option = RoomOption(
+                contract_id=contract.id,
+                option_name=option
+            )
+            db.session.add(new_option)
+        
+        # 수정 정보 업데이트
+        contract.modified_by = current_user.id
+        contract.modified_at = datetime.utcnow()
+        
+        db.session.commit()
+        
+        flash('매물이 수정되었습니다.', 'success')
+        return redirect(url_for('contract.detail', contract_id=contract.id))
+    
+    # GET 요청인 경우 수정 폼 렌더링
+    form = ContractForm(obj=contract)
+    return render_template('contract/create_step3.html',
+                         form=form,
+                         contract=contract,
+                         selected_options=selected_options)
 
 
 def search_contracts(query='', transaction_type='', min_price=None, max_price=None, min_rooms=None, max_rooms=None, sort_by='newest'):

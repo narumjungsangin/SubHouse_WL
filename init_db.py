@@ -7,7 +7,12 @@ from utils.database import init_db
 with app.app_context():
     # 기존 데이터베이스 연결 해제
     db.session.remove()
-    db.drop_all()
+    
+    # 기존 데이터베이스 파일 삭제
+    try:
+        os.remove('database.db')
+    except OSError:
+        pass
     
     # 데이터베이스 초기화
     db.create_all()

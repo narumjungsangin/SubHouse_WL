@@ -13,9 +13,7 @@ class Contract(db.Model):
     longitude = db.Column(db.Float)  # 경도 정보
     room_count = db.Column(db.Integer)
     bathroom_count = db.Column(db.Float)
-    build_year = db.Column(db.Integer)
     roommate_allowed = db.Column(db.Boolean, default=False)
-    size_sqft = db.Column(db.Float)  # 평방피트
     start_date = db.Column(db.DateTime)
     end_date = db.Column(db.DateTime)
     monthly_rent_usd = db.Column(db.Float, index=True)  # 달러
@@ -29,6 +27,11 @@ class Contract(db.Model):
     is_deleted = db.Column(db.Boolean, default=False)
     view_count = db.Column(db.Integer, default=0)
     description = db.Column(db.Text, nullable=True)  # 매물 설명
+    seller_kakao = db.Column(db.String(20), nullable=True)  # 카카오톡 아이디
+    seller_phone = db.Column(db.String(20), nullable=True)  # 전화번호
+    seller_instagram = db.Column(db.String(20), nullable=True)  # 인스타그램 아이디
+    build_year = db.Column(db.Integer)  # 건축 연도
+    size_sqft = db.Column(db.Float)  # 면적 (평방피트)
     
     # 관계 설정
     poster = db.relationship('User', foreign_keys=[posted_by], back_populates='posted_contracts')
