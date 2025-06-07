@@ -10,7 +10,7 @@
             <div class="hidden md:flex items-center space-x-6">
                 <a href="{{ url_for('main.index') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">홈</a>
                 <a href="{{ url_for('contract.create') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">매물 등록</a>
-                <a href="#" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">매물 찾기</a>
+                <a href="{{ url_for('contract.search') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">매물 찾기</a>
                 <a href="{{ url_for('auth.about') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Subhouse 소개</a>
                 
             </div>
