@@ -388,7 +388,7 @@ def search_map():
             'latitude': float(contract.latitude) if contract.latitude else None,
             'longitude': float(contract.longitude) if contract.longitude else None,
             'monthly_rent_usd': float(contract.monthly_rent_usd) if contract.monthly_rent_usd else None,
-            'transaction_type': contract.transaction_type,
+            
             'room_count': contract.room_count
         })
     
@@ -645,12 +645,16 @@ def edit_contract(contract_id):
         flash('매물이 수정되었습니다.', 'success')
         return redirect(url_for('contract.detail', contract_id=contract.id))
     
-    # GET 요청인 경우 수정 폼 렌더링
-    form = ContractForm(obj=contract)
-    return render_template('contract/create_step3.html',
+     # GET 요청 시, edit.html 렌더링
+    # form 객체는 이미 함수 상단에서 form = ContractForm()으로 생성되어 사용 가능합니다.
+    # edit.html은 contract 객체의 속성을 직접 사용하므로, 별도의 data 딕셔너리는 필요 없습니다.
+    google_maps_api_key = current_app.config.get('GOOGLE_MAPS_API_KEY', '')
+    
+    return render_template('contract/edit.html',
                          form=form,
                          contract=contract,
-                         selected_options=selected_options)
+                         selected_options=selected_options,
+                         google_maps_api_key=google_maps_api_key)
 
 
 def search_contracts(query='', transaction_type='', min_price=None, max_price=None, min_rooms=None, max_rooms=None, sort_by='newest'):

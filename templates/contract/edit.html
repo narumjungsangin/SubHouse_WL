@@ -107,19 +107,56 @@
 
             <!-- 옵션 섹션 -->
             <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-semibold mb-4">옵션</h2>
-                
-                <div class="grid grid-cols-2 gap-4">
-                    {% for option in ['에어컨', '냉장고', '세탁기', 'TV', '인터넷', '와이파이', '에스프레소 머신', '세차장', '수영장', '짐보관소'] %}
-                    <div class="flex items-center">
-                        <input type="checkbox" id="option_{{ loop.index }}" name="options" value="{{ option }}"
-                               {% if option in contract.options %}checked{% endif %}
-                               class="mr-2">
-                        <label for="option_{{ loop.index }}" class="text-gray-700">{{ option }}</label>
-                    </div>
-                    {% endfor %}
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
+                        <input type="checkbox" name="options" value="에어컨" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '에어컨' in selected_options %}checked{% endif %}>
+                        에어컨
+                    </label>
+                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
+                        <input type="checkbox" name="options" value="세탁기" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '세탁기' in selected_options %}checked{% endif %}>
+                        세탁기, 건조기
+                    </label>
+                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
+                        <input type="checkbox" name="options" value="냉장고" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '냉장고' in selected_options %}checked{% endif %}>
+                        냉장고
+                    </label>
+                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
+                        <input type="checkbox" name="options" value="전자레인지" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '전자레인지' in selected_options %}checked{% endif %}>
+                        전자레인지
+                    </label>
+                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
+                        <input type="checkbox" name="options" value="TV" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if 'TV' in selected_options %}checked{% endif %}>
+                        TV
+                    </label>
+                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
+                        <input type="checkbox" name="options" value="인터넷" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '인터넷' in selected_options %}checked{% endif %}>
+                        인터넷
+                    </label>
+                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
+                        <input type="checkbox" name="options" value="가구 포함" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '가구 포함' in selected_options %}checked{% endif %}>
+                        가구 포함
+                    </label>
+                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
+                        <input type="checkbox" name="options" value="침대" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '침대' in selected_options %}checked{% endif %}>
+                        침대
+                    </label>
+                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
+                        <input type="checkbox" name="options" value="주차장" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '주차장' in selected_options %}checked{% endif %}>
+                        주차장
+                    </label>
+                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
+                        <input type="checkbox" name="options" value="엘리베이터" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '엘리베이터' in selected_options %}checked{% endif %}>
+                        엘리베이터
+                    </label>
+                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
+                        <input type="checkbox" name="options" value="보안시스템" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '보안시스템' in selected_options %}checked{% endif %}>
+                        보안시스템
+                    </label>
+                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
+                        <input type="checkbox" name="options" value="애완동물 가능" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '애완동물 가능' in selected_options %}checked{% endif %}>
+                        애완동물 가능
+                    </label>
                 </div>
-            </div>
 
             <!-- 사진 업로드 섹션 -->
             <div class="bg-white rounded-lg shadow-md p-6">
@@ -135,7 +172,7 @@
             </div>
 
             <!-- 작성자 정보 섹션 -->
-            <div class="bg-white rounded-lg shadow-md p-6">
+            <!-- <div class="bg-white rounded-lg shadow-md p-6">
                 <h2 class="text-xl font-semibold mb-4">작성자 정보</h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -160,7 +197,7 @@
                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <div class="flex justify-end mt-8">
                 <button type="submit"
