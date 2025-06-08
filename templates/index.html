@@ -1,28 +1,90 @@
 {% extends 'layout/base.html' %}
 
-{% block title %}SubHouse - 당신의 이상적인 집을 찾아보세요{% endblock %}
+{% block title %}{{ _('SubHouse - 당신의 이상적인 집을 찾아보세요') }}{% endblock %}
 
 {% block content %}
 <div class="max-w-7xl mx-auto">
     <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">당신의 이상적인 집을 찾아보세요</h1>
-        <p class="text-xl text-gray-600">간편하게 매물을 등록하고 찾을 수 있는 SubHouse와 함께하세요</p>
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ _('당신의 이상적인 집을 찾아보세요') }}</h1>
+        <p class="text-xl text-gray-600">{{ _('간편하게 매물을 등록하고 찾을 수 있는 SubHouse와 함께하세요') }}</p>
 
         <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4">
             <a href="{{ url_for('contract.create') }}"
                 class="px-8 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition duration-300">
-                매물 등록하기
+                {{ _('매물 등록하기') }}
             </a>
             <a href="{{ url_for('contract.search') }}"
                 class="px-8 py-3 bg-white text-blue-600 font-medium rounded-lg border border-blue-600 hover:bg-blue-50 transition duration-300">
-                매물 찾아보기
+                {{ _('매물 찾아보기') }}
             </a>
         </div>
+        <br>
+        <div class="max-w-3xl mx-auto px-6 py-12 bg-white shadow-xl rounded-2xl">
+            <h1 class="text-4xl font-bold text-center text-blue-800 mb-8">🏠 Welcome to SubHouse | 서브하우스에 오신 것을 환영합니다!</h1>
+          
+            <!-- 소개 (한글) -->
+            <p class="text-gray-700 text-lg mb-6 leading-relaxed">
+              <strong>SubHouse</strong>는 <span class="font-semibold text-blue-600">퍼듀대학교 학생</span>을 위한 <strong>서브리스(sublease) 매물 공유 플랫폼</strong>입니다.
+              퍼듀 지역에서 <span class="underline underline-offset-2">방을 찾고 있는 학생</span>이나 <span class="underline underline-offset-2">양도하려는 학생</span> 모두 쉽게 매물을 검색하고 등록할 수 있습니다.
+            </p>
+          
+            <!-- 소개 (영문) -->
+            <p class="text-gray-700 text-lg mb-6 leading-relaxed">
+              <strong>SubHouse</strong> is a <strong>sublease listing platform</strong> created for <span class="font-semibold text-blue-600">Purdue University students</span>.
+              Whether you're <span class="underline underline-offset-2">looking for a place</span> or <span class="underline underline-offset-2">trying to sublet your current room</span>, you can easily browse and post listings.
+            </p>
+          
+            <!-- 안내 (한글) -->
+            <p class="text-gray-700 text-lg mb-10 leading-relaxed">
+              누구나 사용하기 쉽도록 설계된 이 플랫폼은 <span class="font-medium text-green-700">무료이며 구글 로그인후</span> 이용할 수 있습니다.
+              다만, 아래 주의사항을 꼭 숙지해주세요.
+            </p>
+          
+            <!-- 안내 (영문) -->
+            <p class="text-gray-700 text-lg mb-10 leading-relaxed">
+              This platform is designed to be <span class="font-medium text-green-700">free and easy to use</span>, by logging into Google.
+              However, please carefully read the following disclaimer.
+            </p>
+          
+            <hr class="border-gray-300 my-8">
+          
+            <!-- 주의사항 제목 (한/영 통합) -->
+            <h2 class="text-2xl font-semibold text-red-700 mb-4">⚠️ 이용 시 주의사항 / Important Notes</h2>
+          
+            <!-- 주의사항 목록 (한글 + 영어 병기) -->
+            <ul class="list-disc list-inside text-gray-800 text-lg mb-6 space-y-4">
+              <li>
+                <strong>SubHouse는 매물 소개 용도로만</strong> 사용되어야 하며, 그 외의 용도는 엄격히 금지됩니다. <br>
+                <strong>SubHouse is strictly for listing and viewing sublease properties only.</strong> Any other use is prohibited.
+              </li>
+              <li>
+                매물에 대한 자세한 문의는 <strong>작성자가 남긴 연락처</strong>를 통해 직접 진행해 주세요. <br>
+                For questions about a property, please <strong>contact the listing owner directly</strong> via their provided contact info.
+              </li>
+              <li>
+                <strong>모든 거래에 대한 법적 책임은 이용자 본인에게 있으며, SubHouse는 책임을 지지 않습니다.</strong> <br>
+                <strong>All legal responsibilities lie with the users.</strong> SubHouse holds no liability for any issues that arise.
+              </li>
+            </ul>
+          
+            <hr class="border-gray-300 my-10">
+          
+            <!-- 문의 (한/영 통합) -->
+            <p class="text-gray-700 text-base mb-2">
+              📧 문의사항이나 피드백이 있으시면 아래 이메일로 연락해주세요. <br>
+              📧 For any questions or suggestions, feel free to contact:
+            </p>
+            <p class="text-gray-800 text-base font-semibold">
+              <a href="mailto:joonst26@gmail.com" class="text-blue-600 hover:underline">joonst26@gmail.com</a>
+            </p>
+          </div>
+          
+        
     </div>
 
     <!-- 최근 등록된 매물 섹션 -->
     <!-- <section class="mb-12">
-        <h2 class="text-2xl font-bold text-gray-900 mb-6">최근 등록된 매물</h2>
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">{{ _('최근 등록된 매물') }}</h2>
 
         {% if contracts %}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -80,10 +142,10 @@
         </div>
         {% else %}
         <div class="text-center py-12 bg-gray-50 rounded-lg">
-            <p class="text-gray-600">현재 등록된 매물이 없습니다.</p>
+            <p class="text-gray-600">{{ _('현재 등록된 매물이 없습니다.') }}</p>
             <a href="{{ url_for('contract.create') }}"
                 class="mt-4 inline-block px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition duration-300">
-                첫 매물 등록하기
+                {{ _('첫 매물 등록하기') }}
             </a>
         </div>
         {% endif %}

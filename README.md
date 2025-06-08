@@ -122,3 +122,8 @@ SubHouse/
 ## 라이센스
 
 MIT License
+
+
+##영어
+pybabel compile -d translations
+

@@ -1,6 +1,6 @@
 {% extends 'layout/base.html' %}
 
-{% block title %}SubHouse - 매물 등록{% endblock %}
+{% block title %}SubHouse - {{ _('매물 등록') }}{% endblock %}
 
 {% block head_extra %}
 <!-- 구글 맵스 API -->
@@ -13,7 +13,7 @@
 
 {% block content %}
 <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
-    <h1 class="text-2xl font-bold text-center mb-8">매물 등록</h1>
+    <h1 class="text-2xl font-bold text-center mb-8">{{ _('매물 등록') }}</h1>
     
     <div class="mb-6">
         <div class="flex justify-between mb-4">
@@ -21,19 +21,19 @@
                 <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto">
                     <span>1</span>
                 </div>
-                <p class="mt-2 text-sm font-medium text-blue-600">기본 정보</p>
+                <p class="mt-2 text-sm font-medium text-blue-600">{{ _('기본 정보') }}</p>
             </div>
             <div class="w-1/3 text-center">
                 <div class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center mx-auto">
                     <span>2</span>
                 </div>
-                <p class="mt-2 text-sm font-medium text-gray-500">상세 정보</p>
+                <p class="mt-2 text-sm font-medium text-gray-500">{{ _('상세 정보') }}</p>
             </div>
             <div class="w-1/3 text-center">
                 <div class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center mx-auto">
                     <span>3</span>
                 </div>
-                <p class="mt-2 text-sm font-medium text-gray-500">옵션 및 사진</p>
+                <p class="mt-2 text-sm font-medium text-gray-500">{{ _('옵션 및 사진') }}</p>
             </div>
         </div>
         <div class="relative h-2 bg-gray-200 rounded-full">
@@ -46,17 +46,17 @@
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="col-span-1 md:col-span-2">
-                <label for="house_name" class="block text-sm font-medium text-gray-700 mb-1">매물 이름 *</label>
+                <label for="house_name" class="block text-sm font-medium text-gray-700 mb-1">{{ _('매물 이름 *') }}</label>
                 <input type="text" id="house_name" name="house_name" required
                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                       placeholder="예: Trailside Flats">
+                       placeholder="{{ _('예: Trailside Flats') }}">
             </div>
             
             <div class="col-span-1 md:col-span-2">
-                <label for="location" class="block text-sm font-medium text-gray-700 mb-1">위치 *</label>
+                <label for="location" class="block text-sm font-medium text-gray-700 mb-1">{{ _('위치 *') }}</label>
                 <input type="text" id="location" name="location" required
                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                       placeholder="주소를 입력하세요">
+                       placeholder="{{ _('주소를 입력하세요') }}">
                 <input type="hidden" id="latitude" name="latitude">
                 <input type="hidden" id="longitude" name="longitude">
                 
@@ -64,7 +64,7 @@
             </div>
             
             <div>
-                <label for="monthly_rent_usd" class="block text-sm font-medium text-gray-700 mb-1">월세 (USD) *</label>
+                <label for="monthly_rent_usd" class="block text-sm font-medium text-gray-700 mb-1">{{ _('월세 (USD) *') }}</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">$</span>
                     <input type="number" id="monthly_rent_usd" name="monthly_rent_usd" required min="0" step="0.01"
@@ -74,7 +74,7 @@
             </div>
             
             <div>
-                <label for="deposit_usd" class="block text-sm font-medium text-gray-700 mb-1">유틸 평균가격 (USD) </label>
+                <label for="deposit_usd" class="block text-sm font-medium text-gray-700 mb-1">{{ _('유틸 평균가격 (USD)') }} </label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">$</span>
                     <input type="number" id="deposit_usd" name="deposit_usd" min="0" step="0.01"
@@ -126,7 +126,7 @@
         
         <div class="pt-4 flex justify-end">
             <button type="submit" class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition duration-300">
-                다음 단계
+                {{ _('다음 단계') }}
             </button>
         </div>
     </form>
