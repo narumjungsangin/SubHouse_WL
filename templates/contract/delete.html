@@ -1,6 +1,6 @@
 {% extends 'layout/base.html' %}
 
-{% block title %}매물 삭제 확인 - SubHouse{% endblock %}
+{% block title %}{{ _('매물 삭제 확인 - SubHouse') }}{% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">
@@ -10,12 +10,12 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <h2 class="text-2xl font-bold mt-4 mb-2">매물 삭제 확인</h2>
-                <p class="text-gray-700 mb-6">정말로 "{{ contract.house_name }}" 매물을 삭제하시겠습니까?</p>
+                <h2 class="text-2xl font-bold mt-4 mb-2">{{ _('매물 삭제 확인') }}</h2>
+                <p class="text-gray-700 mb-6">{{ _('정말로 "%(house_name)s" 매물을 삭제하시겠습니까?', house_name=contract.house_name) }}</p>
 
                 <div class="space-y-4">
-                    <p class="text-gray-600">삭제된 매물은 복구할 수 없습니다.</p>
-                    <p class="text-gray-600">관련된 사진, 옵션, 좋아요 등 모든 데이터가 함께 삭제됩니다.</p>
+                    <p class="text-gray-600">{{ _('삭제된 매물은 복구할 수 없습니다.') }}</p>
+                    <p class="text-gray-600">{{ _('관련된 사진, 옵션, 좋아요 등 모든 데이터가 함께 삭제됩니다.') }}</p>
                 </div>
 
                 <div class="mt-8 flex justify-center space-x-4">
@@ -23,12 +23,12 @@
                         {{ form.csrf_token }}
                         <button type="submit"
                                 class="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-300">
-                            삭제하기
+                            {{ _('삭제하기') }}
                         </button>
                     </form>
                     <a href="{{ url_for('contract.detail', contract_id=contract.id) }}"
                        class="px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors duration-300">
-                        취소
+                        {{ _('취소') }}
                     </a>
                 </div>
             </div>

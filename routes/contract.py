@@ -92,7 +92,7 @@ def create_step2():
             'transaction_type': request.form.get('transaction_type', ''),
             'room_count': request.form.get('room_count', ''),
             'bathroom_count': request.form.get('bathroom_count', ''),
-            'build_year': request.form.get('build_year', ''),
+            'floor': request.form.get('floor', ''),
             'roommate_allowed': 'roommate_allowed' in request.form,
             'size_sqft': request.form.get('size_sqft', ''),
             'start_date': request.form.get('start_date', ''),
@@ -120,7 +120,7 @@ def create_step3():
             'transaction_type': request.form.get('transaction_type', ''),
             'room_count': request.form.get('room_count', ''),
             'bathroom_count': request.form.get('bathroom_count', ''),
-            'build_year': request.form.get('build_year', ''),
+            'floor': request.form.get('floor', ''),
             'roommate_allowed': 'roommate_allowed' in request.form,
             'size_sqft': request.form.get('size_sqft', ''),
             'start_date': request.form.get('start_date', ''),
@@ -144,7 +144,7 @@ def submit():
         deposit_usd = float(request.form.get('deposit_usd')) if request.form.get('deposit_usd') else None
         room_count = int(request.form.get('room_count')) if request.form.get('room_count') else None
         bathroom_count = float(request.form.get('bathroom_count')) if request.form.get('bathroom_count') else None
-        build_year = int(request.form.get('build_year')) if request.form.get('build_year') else None
+        floor = request.form.get('floor') if request.form.get('floor') else None
         roommate_allowed = 'roommate_allowed' in request.form
         size_sqft = float(request.form.get('size_sqft')) if request.form.get('size_sqft') else None
         
@@ -170,7 +170,7 @@ def submit():
             deposit_usd=deposit_usd,
             room_count=room_count,
             bathroom_count=bathroom_count,
-            build_year=build_year,
+            floor=floor,
             roommate_allowed=roommate_allowed,
             size_sqft=size_sqft,
             start_date=start_date,
@@ -443,6 +443,10 @@ def detail(contract_id):
     # 작성자 여부 확인
     is_owner = current_user.is_authenticated and contract.posted_by == current_user.id
     
+    # 관리자 이메일 (실제 환경에서는 설정 파일 등에서 관리하는 것이 좋습니다)
+    ADMIN_EMAIL = 'joonst26@gmail.com'
+    is_admin = current_user.is_authenticated and current_user.email == ADMIN_EMAIL
+    
     return render_template('contract/detail.html',
                            contract=contract,
                            photos=photos,
@@ -451,7 +455,8 @@ def detail(contract_id):
                            similar_contracts=similar_contracts,
                            similar_photos=similar_photos,
                            poster=poster,
-                           is_owner=is_owner)
+                           is_owner=is_owner,
+                           is_admin=is_admin)
 
 
 @contract_bp.route('/like/<int:contract_id>', methods=['POST'])
@@ -564,7 +569,7 @@ def edit_contract(contract_id):
         contract.deposit_usd = safe_convert(request.form.get('deposit_usd'), float)
         contract.room_count = safe_convert(request.form.get('room_count'), int)
         contract.bathroom_count = safe_convert(request.form.get('bathroom_count'), float)
-        contract.build_year = safe_convert(request.form.get('build_year'), int)
+        contract.floor = request.form.get('floor')
         contract.size_sqft = safe_convert(request.form.get('size_sqft'), float)
         
         contract.roommate_allowed = 'roommate_allowed' in request.form
@@ -609,7 +614,7 @@ def edit_contract(contract_id):
         contract.deposit_usd = float(request.form.get('deposit_usd')) if request.form.get('deposit_usd') else None
         contract.room_count = int(request.form.get('room_count'))
         contract.bathroom_count = float(request.form.get('bathroom_count'))
-        contract.build_year = int(request.form.get('build_year'))
+        contract.floor = request.form.get('floor')
         contract.roommate_allowed = 'roommate_allowed' in request.form
         contract.size_sqft = float(request.form.get('size_sqft'))
         

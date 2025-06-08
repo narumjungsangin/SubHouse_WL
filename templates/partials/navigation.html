@@ -34,9 +34,17 @@
                             <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{{ _('로그아웃') }}</a>
                         </div>
                     </div> -->
-                    <a href="{{ url_for('auth.profile') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                    <!-- 개인 프로필 구현 필요 -->
+                    {% if is_admin %}
+                    <a href="#" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white hover:opacity-90" style="background-color: #CD313A;">
+                        Admin
+                    </a>
+                    {% else %}
+                    <!-- <a href="{{ url_for('auth.profile') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"> -->
+                    <a href="#" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
                         {{ _('안녕하세요,') }} {{ current_user.name }}
                     </a>
+                    {% endif %}
                     <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
                 {% else %}
                     <a href="{{ url_for('auth.google_login') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">

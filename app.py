@@ -1,6 +1,7 @@
 import os
 import logging
 from flask import Flask, render_template, session, request, redirect, url_for # session, request, redirect, url_for 추가
+from flask_login import current_user # current_user 추가
 from flask_wtf.csrf import CSRFProtect
 from models import init_app as init_models
 from routes import init_app as init_routes
@@ -73,10 +74,13 @@ def create_app(config_name=None):
     @app.context_processor
     def inject_language_vars():
         current_locale = get_locale_for_babel() # 현재 로케일 가져오기
+        ADMIN_EMAIL = 'joonst26@gmail.com' # 실제 환경에서는 설정 파일 등에서 관리
+        is_admin = current_user.is_authenticated and hasattr(current_user, 'email') and current_user.email == ADMIN_EMAIL
         return dict(
             LANGUAGES=app.config['LANGUAGES'],
             CURRENT_LANGUAGE_CODE=current_locale,
-            CURRENT_LANGUAGE_NAME=app.config['LANGUAGES'].get(current_locale)
+            CURRENT_LANGUAGE_NAME=app.config['LANGUAGES'].get(current_locale),
+            is_admin=is_admin
         )
 
     @app.route('/set_language/<language>')

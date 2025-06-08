@@ -30,7 +30,7 @@ class Contract(db.Model):
     seller_kakao = db.Column(db.String(20), nullable=True)  # 카카오톡 아이디
     seller_phone = db.Column(db.String(20), nullable=True)  # 전화번호
     seller_instagram = db.Column(db.String(20), nullable=True)  # 인스타그램 아이디
-    build_year = db.Column(db.Integer)  # 건축 연도
+    floor = db.Column(db.String(50))  # 층
     size_sqft = db.Column(db.Float)  # 면적 (평방피트)
     
     # 관계 설정
@@ -58,7 +58,7 @@ class Contract(db.Model):
             'longitude': self.longitude,
             'room_count': self.room_count,
             'bathroom_count': self.bathroom_count,
-            'build_year': self.build_year,
+            'floor': self.floor,
             'roommate_allowed': self.roommate_allowed,
             'size_sqft': self.size_sqft,
             'start_date': self.start_date.isoformat() if self.start_date else None,
