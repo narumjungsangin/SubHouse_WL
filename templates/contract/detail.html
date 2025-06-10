@@ -330,15 +330,24 @@
 <script>
     // Google Maps 초기화 함수
     function initMap() {
-        // HTML 데이터 속성에서 값 가져오기
         const mapElement = document.getElementById('map');
-        const latitude = parseFloat(mapElement.dataset.latitude);
-        const longitude = parseFloat(mapElement.dataset.longitude);
+        
+        // 위도, 경도 값이 유효한지 확인
+        const lat = mapElement.dataset.latitude ? parseFloat(mapElement.dataset.latitude) : NaN;
+        const lng = mapElement.dataset.longitude ? parseFloat(mapElement.dataset.longitude) : NaN;
         const propertyName = mapElement.dataset.propertyName;
+
+        // 위도 또는 경도가 유효하지 않은 경우, 메시지 표시
+        if (isNaN(lat) || isNaN(lng)) {
+            mapElement.innerHTML = '<div class="w-full h-full bg-gray-200 flex items-center justify-center"><span class="text-gray-500">{{ _("위치 정보가 없습니다.") }}</span></div>';
+            return;
+        }
+
+        const location = { lat: lat, lng: lng };
         
         // 지도 옵션 설정
         const mapOptions = {
-            center: { lat: latitude, lng: longitude },
+            center: location,
             zoom: 15,
             mapTypeControl: false,
             streetViewControl: false,
@@ -349,8 +358,8 @@
         const map = new google.maps.Map(mapElement, mapOptions);
         
         // 마커 생성
-        const marker = new google.maps.Marker({
-            position: { lat: latitude, lng: longitude },
+        new google.maps.Marker({
+            position: location,
             map: map,
             title: propertyName
         });

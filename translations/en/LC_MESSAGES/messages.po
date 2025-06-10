@@ -136,8 +136,8 @@ msgid "유틸리티"
 msgstr "Utilities"
 
 #: templates/contract/create_final.html:65
-msgid "방 개수"
-msgstr "Number of Rooms"
+msgid "방 개수(Studio 시 0개)"
+msgstr "Number of Rooms(For Studio: 0)"
 
 #: templates/contract/create_final.html:69
 msgid "화장실 개수"
