@@ -21,6 +21,9 @@ def create_app(config_name=None):
     config_obj = get_config()
     app.config.from_object(config_obj)
 
+    # 업로드 폴더 설정
+    app.config['UPLOAD_FOLDER'] = os.path.join(app.static_folder, 'uploads')
+
     # 언어 설정 추가
     app.config['LANGUAGES'] = {
         'en': 'English',

@@ -43,4 +43,3 @@ static/uploads
 memory/
 tasks.json
 .pylintrc
-migrations/

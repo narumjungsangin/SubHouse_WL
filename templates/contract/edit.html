@@ -81,7 +81,7 @@
 
                 <div class="mt-4">
                     {{ form.description.label(class="block text-sm font-medium text-gray-700 mb-1") }}
-                    {{ form.description(rows="4", class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500") }}
+                    {{ form.description(class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500", rows=4) }}
                     {% if form.description.errors %}
                         <ul class="text-red-500 text-xs italic mt-1">
                             {% for error in form.description.errors %}<li>{{ error }}</li>{% endfor %}
@@ -93,73 +93,68 @@
             <!-- 옵션 섹션 -->
             <div class="bg-white rounded-lg shadow-md p-6">
                 <h3 class="text-lg font-medium text-gray-900 mb-3">{{ _('옵션') }}</h3>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {% set available_options = ['에어컨', '세탁기', '냉장고', '전자레인지', 'TV', '인터넷', '가구 포함', '침대', '주차장', '엘리베이터', '보안시스템', '애완동물 가능'] %}
-                    {% for option_key in available_options %}
-                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm hover:bg-gray-50 cursor-pointer">
-                        <input type="checkbox" name="options" value="{{ option_key }}" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if option_key in selected_options %}checked{% endif %}>
-                        {{ _(option_key) }}
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {% for option_name in option_names %}
+                    <label class="flex items-center">
+                        <input type="checkbox" name="options" value="{{ option_name }}" 
+                               class="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" 
+                               {% if option_name in current_options %}checked{% endif %}>
+                        {{ _(option_name) }}
                     </label>
                     {% endfor %}
                 </div>
             </div>
 
-            <!-- 사진 업로드 섹션 -->
+            <!-- 사진 관리 섹션 -->
             <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-semibold mb-4">{{ _('사진 업로드') }}</h2>
+                <h2 class="text-xl font-semibold mb-4">{{ _('사진 관리') }}</h2>
                 
+                <!-- 현재 사진 -->
                 {% if contract.photos %}
-                <div class="mb-4">
-                    <h3 class="text-lg font-medium text-gray-900 mb-2">{{ _('현재 사진') }}</h3>
-                    <div class="flex flex-wrap gap-4">
+                <div class="mb-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-3">{{ _('현재 사진') }}</h3>
+                    <div id="photo-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                         {% for photo in contract.photos %}
-                        <div class="relative group">
-                            <img src="{{ url_for('static', filename='uploads/' + photo.photo_url) }}" alt="{{ _('매물 사진') }}" class="h-24 w-24 object-cover rounded-md">
+                        <div id="photo-{{ photo.seq }}" class="relative group">
+                            <img src="{{ url_for('static', filename=photo.file_path) }}" alt="{{ _('매물 사진') }}" class="w-full h-32 object-cover rounded-lg shadow-md">
+                            <div class="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button type="button" 
+                                        hx-delete="{{ url_for('contract.delete_photo', photo_id=photo.seq) }}"
+                                        hx-target="#photo-{{ photo.seq }}"
+                                        hx-swap="outerHTML"
+                                        hx-confirm="{{ _('정말 이 사진을 삭제하시겠습니까?') }}"
+                                        class="text-white bg-red-600 hover:bg-red-700 rounded-full p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                         {% endfor %}
                     </div>
                 </div>
                 {% endif %}
 
+                <!-- 새 사진 추가 -->
                 <div>
-                    {{ form.photos.label(class="block text-sm font-medium text-gray-700 mb-1") }}
-                    {{ form.photos(class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500", multiple="multiple") }}
-                    {% if form.photos.errors %}
-                        <ul class="text-red-500 text-xs italic mt-1">
-                            {% for error in form.photos.errors %}<li>{{ error }}</li>{% endfor %}
-                        </ul>
-                    {% endif %}
-                    <p class="text-xs text-gray-500 mt-1">{{ _('여러 장의 사진을 선택할 수 있습니다. 기존 사진은 유지되며, 새 사진을 추가하면 기존 사진에 더해집니다. 사진을 삭제하려면 별도의 기능이 필요합니다.') }}</p>
+                    <h3 class="text-lg font-medium text-gray-900 mb-3">{{ _('새 사진 추가') }}</h3>
+                    <div id="photos-upload-container">
+                        {{ form.photos(
+                            id='photos', 
+                            multiple='multiple', 
+                            accept='.png, .jpg, .jpeg, .gif',
+                            class='block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100'
+                        ) }}
+                        <p class="mt-1 text-xs text-gray-500">{{ _('PNG, JPG, JPEG, GIF (최대 5MB)') }}</p>
+                        {% if form.photos.errors %}
+                            <ul class="text-red-500 text-xs italic mt-1">
+                                {% for error in form.photos.errors %}<li>{{ error }}</li>{% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                    <div id="preview-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4"></div>
                 </div>
             </div>
-
-            <!-- 작성자 정보 섹션 (Commented out as in original) -->
-            <!-- <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-semibold mb-4">{{ _('작성자 정보') }}</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label for="seller_kakao" class="block text-sm font-medium text-gray-700 mb-1">{{ _('카카오톡 ID') }}</label>
-                        <input type="text" id="seller_kakao" name="seller_kakao" 
-                               value="{{ contract.seller_kakao }}" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    
-                    <div>
-                        <label for="seller_instagram" class="block text-sm font-medium text-gray-700 mb-1">{{ _('인스타그램 ID') }}</label>
-                        <input type="text" id="seller_instagram" name="seller_instagram" 
-                               value="{{ contract.seller_instagram }}" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    
-                    <div>
-                        <label for="seller_phone" class="block text-sm font-medium text-gray-700 mb-1">{{ _('전화번호') }}</label>
-                        <input type="tel" id="seller_phone" name="seller_phone" 
-                               value="{{ contract.seller_phone }}" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                </div>
-            </div> -->
 
             <div class="flex justify-end mt-8">
                 <button type="submit"
@@ -170,4 +165,40 @@
         </form>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const photosInput = document.getElementById('photos');
+    const previewContainer = document.getElementById('preview-container');
+
+    if (photosInput) {
+        photosInput.addEventListener('change', function(event) {
+            // Clear previous previews
+            previewContainer.innerHTML = '';
+
+            const files = event.target.files;
+            if (files) {
+                Array.from(files).forEach(file => {
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const div = document.createElement('div');
+                            div.classList.add('relative');
+                            
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.alt = 'Preview';
+                            img.classList.add('w-full', 'h-32', 'object-cover', 'rounded-lg');
+                            
+                            div.appendChild(img);
+                            previewContainer.appendChild(div);
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

@@ -235,12 +235,15 @@ def submit():
                 # 임시 파일을 최종 위치로 이동
                 os.rename(temp_path, final_path)
                 
-                # 데이터베이스에 사진 정보 저장
-                photo = ContractPhoto(
+                # DB에 사진 정보 저장 (상대 경로 사용)
+                relative_path = os.path.join(os.path.basename(current_app.config['UPLOAD_FOLDER']), filename).replace('\\', '/')
+                current_app.logger.debug(f"[Submit] Saving photo with relative_path: {relative_path}") # 디버깅 로그 추가
+                new_photo = ContractPhoto(
                     file_id=filename,
+                    file_path=relative_path,
                     contract_id=new_contract.id
                 )
-                db.session.add(photo)
+                db.session.add(new_photo)
         
         db.session.commit()
         flash('매물이 성공적으로 등록되었습니다.', 'success')
@@ -498,101 +501,116 @@ def detail(contract_id):
 def edit_contract(contract_id):
     """매물 수정"""
     contract = Contract.query.get_or_404(contract_id)
+
     if contract.posted_by != current_user.id and not current_user.is_admin:
         abort(403)
 
-    form = ContractForm(obj=contract) # GET 요청 시 현재 contract 데이터로 폼을 채움
-
+    # POST 요청 시에는 제출된 데이터로 폼을 생성하고, GET 요청 시에는 DB 데이터로 폼을 채웁니다.
+    # 이렇게 하면 파일 필드의 유효성 검사 오류를 방지할 수 있습니다.
     if request.method == 'POST':
-        current_app.logger.info(f"Edit contract POST request for ID: {contract_id}")
-        # POST 요청 시에는 request.form 데이터로 폼을 다시 채우고 유효성 검사를 수행
-        # form = ContractForm(request.form, obj=contract) # 이렇게 하면 obj가 덮어써질 수 있음
-        # form = ContractForm(request.form) # 이렇게 하면 기존 contract 정보가 날아감
-        # 올바른 방법은 validate_on_submit()이 내부적으로 request.form을 사용하도록 하는 것
-        # 또는 명시적으로 form = ContractForm(request.form, obj=contract) 후 form.process()
-        
-        # WTForms는 validate_on_submit() 호출 시 request.form의 데이터로 폼을 채웁니다.
-        # obj=contract는 GET 요청 시 초기값을 채우는 데 주로 사용되며,
-        # POST 시에는 폼 필드에 제출된 값으로 덮어써집니다.
-        # 그러나 populate_obj 전에 form 인스턴스를 request.form으로 다시 만드는 것이 안전할 수 있습니다.
-        # form = ContractForm(request.form, obj=contract) # 이렇게 하면 populate_obj 전에 폼 데이터가 반영됨
+        form = ContractForm()
+    else:
+        form = ContractForm(obj=contract)
 
-        if form.validate_on_submit():
-            current_app.logger.info("Form validation successful.")
-            try:
-                # 1. 폼 데이터로 기본 정보 업데이트
-                form.populate_obj(contract)
-                # BooleanField는 populate_obj로 잘 안될 수 있으므로 수동 처리
-                contract.roommate_allowed = form.roommate_allowed.data
-                current_app.logger.info("Contract object populated from form.")
+    if form.validate_on_submit():
+        # populate_obj는 모든 필드를 덮어쓰므로, 필요한 필드만 수동으로 업데이트합니다.
+        contract.house_name = form.house_name.data
+        contract.location = form.location.data
+        contract.latitude = form.latitude.data
+        contract.longitude = form.longitude.data
+        contract.room_count = form.room_count.data
+        contract.bathroom_count = form.bathroom_count.data
+        contract.roommate_allowed = form.roommate_allowed.data
+        contract.start_date = form.start_date.data
+        contract.end_date = form.end_date.data
+        contract.monthly_rent_usd = form.monthly_rent_usd.data
+        contract.deposit_usd = form.deposit_usd.data
+        contract.description = form.description.data
+        contract.seller_kakao = form.seller_kakao.data
+        contract.seller_phone = form.seller_phone.data
+        contract.seller_instagram = form.seller_instagram.data
+        contract.updated_at = datetime.utcnow()
 
-                # 2. 옵션 업데이트 (기존 옵션 삭제 후 새로 추가)
-                RoomOption.query.filter_by(contract_id=contract.id).delete()
-                selected_option_names = request.form.getlist('options') # edit.html 템플릿의 옵션 필드 name이 'options'여야 함
-                for option_name in selected_option_names:
-                    new_option = RoomOption(contract_id=contract.id, option_name=option_name)
-                    db.session.add(new_option)
-                current_app.logger.info(f"Options updated: {selected_option_names}")
+        # 옵션 정보 업데이트
+        RoomOption.query.filter_by(contract_id=contract.id).delete()
+        selected_options = request.form.getlist('options')
+        for option_name in selected_options:
+            option = RoomOption(contract_id=contract.id, option_name=option_name)
+            db.session.add(option)
 
-                # 3. 사진 업로드 처리
-                uploaded_files = form.photos.data # MultipleFileField는 data 속성으로 파일 리스트를 반환
-                if uploaded_files:
-                    current_app.logger.info(f"Processing {len(uploaded_files)} uploaded photos.")
-                    # 기존 사진 삭제 로직 (필요하다면 여기에 추가)
-                    # ContractPhoto.query.filter_by(contract_id=contract.id).delete() # 예시: 모든 기존 사진 삭제
+        # 사진 업로드 처리 (form.photos.data 사용)
+        if form.photos.data:
+            for photo_file in form.photos.data:
+                if photo_file and allowed_file(photo_file.filename):
+                    filename = secure_filename(photo_file.filename)
+                    unique_id = str(uuid.uuid4())
+                    file_ext = filename.rsplit('.', 1)[1].lower()
+                    unique_filename = f"{unique_id}.{file_ext}"
+                    
+                    upload_folder = current_app.config['UPLOAD_FOLDER']
+                    if not os.path.exists(upload_folder):
+                        os.makedirs(upload_folder)
+                        
+                    file_path = os.path.join(upload_folder, unique_filename)
+                    photo_file.save(file_path)
+                    
+                    relative_path = os.path.join(os.path.basename(current_app.config['UPLOAD_FOLDER']), unique_filename).replace('\\', '/')
+                    current_app.logger.debug(f"[Edit] Saving photo with relative_path: {relative_path}") # 디버깅 로그 추가
+                    new_photo = ContractPhoto(
+                        contract_id=contract.id,
+                        file_id=unique_filename,
+                        file_path=relative_path
+                    )
+                    db.session.add(new_photo)
 
-                    upload_dir = os.path.join(current_app.static_folder, 'uploads')
-                    if not os.path.exists(upload_dir):
-                        os.makedirs(upload_dir)
+        try:
+            db.session.commit()
+            flash('매물 정보가 성공적으로 수정되었습니다.', 'success')
+            return redirect(url_for('contract.detail', contract_id=contract.id))
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.error(f"Error updating contract {contract.id}: {e}")
+            flash('매물 정보 수정 중 오류가 발생했습니다.', 'danger')
 
-                    for photo_file_storage in uploaded_files:
-                        if photo_file_storage and allowed_file(photo_file_storage.filename):
-                            filename = secure_filename(photo_file_storage.filename)
-                            unique_filename = f"{str(uuid.uuid4())}_{filename}"
-                            file_path = os.path.join(upload_dir, unique_filename)
-                            photo_file_storage.save(file_path)
-                            
-                            new_photo = ContractPhoto(
-                                file_id=unique_filename, # 실제 저장된 파일명 (경로 제외)
-                                contract_id=contract.id,
-                                filepath=f'uploads/{unique_filename}' # static 기준 경로
-                            )
-                            db.session.add(new_photo)
-                            current_app.logger.info(f"Photo saved: {unique_filename}")
-                        elif photo_file_storage: # 파일이 있지만 허용되지 않은 확장자인 경우
-                            current_app.logger.warning(f"Skipped disallowed file: {photo_file_storage.filename}")
+    if form.errors:
+        current_app.logger.warning(f"Contract edit form validation failed. Errors: {form.errors}")
 
-
-                db.session.commit()
-                current_app.logger.info("Database commit successful.")
-                flash('매물 정보가 성공적으로 수정되었습니다.', 'success')
-                return redirect(url_for('contract.detail', contract_id=contract.id))
-            
-            except Exception as e:
-                db.session.rollback()
-                current_app.logger.error(f"Error during contract update: {e}", exc_info=True)
-                flash('매물 수정 중 오류가 발생했습니다. 다시 시도해주세요.', 'error')
-        else:
-            # 유효성 검사 실패
-            current_app.logger.warning(f"Contract edit form validation failed. Errors: {form.errors}")
-            # flash_form_errors(form) # flash_form_errors 함수가 있다면 사용
-            for field, errors in form.errors.items():
-                for error in errors:
-                    flash(f"{getattr(form, field).label.text} 필드 오류: {error}", 'error')
-
-
-    # GET 요청 또는 유효성 검사 실패 시 템플릿 렌더링
-    current_options = RoomOption.query.filter_by(contract_id=contract.id).all()
-    selected_options = [option.option_name for option in current_options]
     google_maps_api_key = current_app.config.get('GOOGLE_MAPS_API_KEY', '')
+    option_names = ['furnished', 'parking', 'laundry', 'ac', 'wifi', 'kitchen', 'elevator', 'pets_allowed']
+    current_options = {opt.option_name for opt in contract.room_options}
     
-    # form 인스턴스는 GET 요청 시 obj=contract로 초기화되었거나,
-    # POST 실패 시 제출된 데이터와 오류를 포함하고 있음.
     return render_template('contract/edit.html', 
                            form=form, 
                            contract=contract, 
-                           selected_options=selected_options,
-                           google_maps_api_key=google_maps_api_key)
+                           google_maps_api_key=google_maps_api_key,
+                           option_names=option_names,
+                           current_options=current_options)
+
+@contract_bp.route('/delete_photo/<int:photo_id>', methods=['POST'])
+@login_required
+def delete_photo(photo_id):
+    """사진 삭제 처리 (AJAX/HTMX)"""
+    photo = ContractPhoto.query.get_or_404(photo_id)
+    contract = Contract.query.get_or_404(photo.contract_id)
+
+    if contract.posted_by != current_user.id and not current_user.is_admin:
+        abort(403)
+
+    try:
+        # UPLOAD_FOLDER 경로와 photo.file_id를 결합하여 전체 파일 경로를 만듭니다.
+        file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], photo.file_id)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+
+        db.session.delete(photo)
+        db.session.commit()
+        
+        # HTMX 요청에 대해 빈 응답을 보내 해당 HTML 요소를 제거하도록 함
+        return '', 200
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Error deleting photo {photo_id}: {e}")
+        return jsonify({'success': False, 'message': '사진 삭제 중 오류가 발생했습니다.'}), 500
 
 
 @contract_bp.route('/like/<int:contract_id>', methods=['POST'])

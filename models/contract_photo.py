@@ -6,6 +6,7 @@ class ContractPhoto(db.Model):
     
     seq = db.Column(db.Integer, primary_key=True, autoincrement=True)
     file_id = db.Column(db.String(255), nullable=False)
+    file_path = db.Column(db.String(255), nullable=False)
     contract_id = db.Column(db.Integer, db.ForeignKey('contracts.id'), nullable=False, index=True)
     
     # 관계 설정
@@ -19,5 +20,6 @@ class ContractPhoto(db.Model):
         return {
             'seq': self.seq,
             'file_id': self.file_id,
+            'file_path': self.file_path,
             'contract_id': self.contract_id
         }
