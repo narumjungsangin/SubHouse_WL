@@ -1,14 +1,46 @@
+# Environment variables
 .env
-.pylintrc
-database.db.backup
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*~
+
+# Virtual environment
+.venv/
+venv/
+
+# Instance folder
 instance/
+
+# Database
 database.db
+database.db.backup
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Testing
 .coverage
+.pytest_cache/
 htmlcov/
-migrations/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Windsurf
+.windsurf/
+
+# Project specific
+/uploads
 memory/
 tasks.json
-__pycache__
-/uploads
-/.venv
-/.windsurf
+.pylintrc
+migrations/

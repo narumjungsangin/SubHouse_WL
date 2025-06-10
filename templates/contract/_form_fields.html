@@ -1,0 +1,66 @@
+{{ form.hidden_tag() }}
+
+<div class="form-group">
+    {{ form.title.label(class="form-control-label") }}
+    {{ form.title(class="form-control") }}
+</div>
+
+<div class="form-group">
+    {{ form.deposit.label(class="form-control-label") }}
+    {{ form.deposit(class="form-control") }}
+</div>
+
+<div class="form-group">
+    {{ form.monthly_rent.label(class="form-control-label") }}
+    {{ form.monthly_rent(class="form-control") }}
+</div>
+
+<div class="form-group">
+    {{ form.start_date.label(class="form-control-label") }}
+    {{ form.start_date(class="form-control") }}
+</div>
+
+<div class="form-group">
+    {{ form.end_date.label(class="form-control-label") }}
+    {{ form.end_date(class="form-control") }}
+</div>
+
+<div class="form-group">
+    {{ form.location.label(class="form-control-label") }}
+    {{ form.location(class="form-control", id="location-input") }}
+</div>
+
+<div id="map" style="height: 400px; width: 100%;"></div>
+
+{{ form.latitude(id="latitude-input") }}
+{{ form.longitude(id="longitude-input") }}
+
+<div class="form-group">
+    {{ form.description.label(class="form-control-label") }}
+    {{ form.description(class="form-control", rows=5) }}
+</div>
+
+<div class="form-group">
+    {{ form.seller_name.label(class="form-control-label") }}
+    {{ form.seller_name(class="form-control") }}
+</div>
+
+<div class="form-group">
+    {{ form.seller_phone.label(class="form-control-label") }}
+    {{ form.seller_phone(class="form-control") }}
+</div>
+
+<div class="form-group">
+    {{ form.seller_kakao.label(class="form-control-label") }}
+    {{ form.seller_kakao(class="form-control") }}
+</div>
+
+<div class="form-group">
+    {{ form.seller_instagram.label(class="form-control-label") }}
+    {{ form.seller_instagram(class="form-control") }}
+</div>
+
+<div class="form-group">
+    {{ form.images.label(class="form-control-label") }}
+    {{ form.images(class="form-control-file") }}
+</div>

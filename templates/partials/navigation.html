@@ -3,7 +3,9 @@
         <div class="flex justify-between items-center h-16">
             <!-- 로고 -->
             <div class="flex-shrink-0">
-                <a href="{{ url_for('main.index') }}" class="text-blue-600 font-bold text-xl">SubHouse</a>
+                <a href="{{ url_for('main.index') }}" class="flex items-center">
+                        <img src="{{ url_for('static', filename='images/subhouse_logo.png') }}" alt="SubHouse Logo" class="h-20">
+                    </a>
             </div>
             
             <!-- 데스크톱 메뉴 -->

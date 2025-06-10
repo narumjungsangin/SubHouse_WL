@@ -74,8 +74,7 @@ def create_app(config_name=None):
     @app.context_processor
     def inject_language_vars():
         current_locale = get_locale_for_babel() # 현재 로케일 가져오기
-        ADMIN_EMAIL = 'joonst26@gmail.com' # 실제 환경에서는 설정 파일 등에서 관리
-        is_admin = current_user.is_authenticated and hasattr(current_user, 'email') and current_user.email == ADMIN_EMAIL
+        is_admin = current_user.is_authenticated and hasattr(current_user, 'email') and current_user.email == app.config.get('ADMIN_EMAIL')
         return dict(
             LANGUAGES=app.config['LANGUAGES'],
             CURRENT_LANGUAGE_CODE=current_locale,

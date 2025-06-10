@@ -76,7 +76,7 @@ def login():
         current_app.logger.info(f"Saved next URL to session: {next_url}")
         current_app.logger.info(f"Session after save: {session}")
 
-    # Google 로그인으로 리다이렉트 (쉷션 대신 쿼리 파라미터로 next 전달)
+    # Google 로그인으로 리다이렉트 (세션 대신 쿼리 파라미터로 next 전달)
     if next_url:
         return redirect(url_for("auth.google_login", next=next_url))
     else:
