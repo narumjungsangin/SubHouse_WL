@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, current_app, abort
 from flask_login import login_required, current_user
 from flask_wtf import FlaskForm
+from flask_wtf.file import MultipleFileField, FileAllowed
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import os
@@ -17,8 +18,8 @@ from models.like import Like
 class ContractForm(FlaskForm):
     house_name = StringField('건물명', validators=[Optional()])
     location = StringField('위치', validators=[DataRequired()])
-    latitude = FloatField('위도', validators=[DataRequired()])
-    longitude = FloatField('경도', validators=[DataRequired()])
+    latitude = FloatField('위도', validators=[Optional()])
+    longitude = FloatField('경도', validators=[Optional()])
     room_count = IntegerField('방 개수', validators=[DataRequired()])
     bathroom_count = FloatField('화장실 개수', validators=[DataRequired()])
     roommate_allowed = BooleanField('룸메이트 허용')
@@ -30,6 +31,10 @@ class ContractForm(FlaskForm):
     seller_kakao = StringField('카카오톡 아이디', validators=[Optional()])
     seller_phone = StringField('전화번호', validators=[Optional()])
     seller_instagram = StringField('인스타그램 아이디', validators=[Optional()])
+    photos = MultipleFileField('사진 업로드', validators=[
+        Optional(),
+        FileAllowed(['jpg', 'jpeg', 'png', 'gif'], '이미지 파일만 업로드 가능합니다!')
+    ])
     # CSRF 토큰은 FlaskForm에서 자동으로 처리됩니다.
 
     # __init__ 메소드는 특별한 로직이 없다면 생략 가능합니다.
@@ -493,66 +498,100 @@ def detail(contract_id):
 def edit_contract(contract_id):
     """매물 수정"""
     contract = Contract.query.get_or_404(contract_id)
-
-    # 매물 소유자 또는 관리자만 수정 가능
     if contract.posted_by != current_user.id and not current_user.is_admin:
-        abort(403) # 권한 없음
+        abort(403)
 
-    form = ContractForm(obj=contract)
+    form = ContractForm(obj=contract) # GET 요청 시 현재 contract 데이터로 폼을 채움
 
-    if request.method == 'POST' and form.validate_on_submit():
-        try:
-            # 폼 데이터로 매물 정보 업데이트
-            contract.house_name = request.form.get('house_name')
-            contract.location = request.form.get('location')
-            latitude_str = request.form.get('latitude')
-            longitude_str = request.form.get('longitude')
-            contract.latitude = float(latitude_str) if latitude_str and latitude_str not in ('', 'undefined') else None
-            contract.longitude = float(longitude_str) if longitude_str and longitude_str not in ('', 'undefined') else None
-            contract.monthly_rent_usd = float(request.form.get('monthly_rent_usd')) if request.form.get('monthly_rent_usd') else None
-            contract.deposit_usd = float(request.form.get('deposit_usd')) if request.form.get('deposit_usd') else None
-            contract.room_count = int(request.form.get('room_count')) if request.form.get('room_count') else None
-            contract.bathroom_count = float(request.form.get('bathroom_count')) if request.form.get('bathroom_count') else None
-            contract.floor = request.form.get('floor') if request.form.get('floor') else None
-            contract.roommate_allowed = 'roommate_allowed' in request.form
-            contract.size_sqft = float(request.form.get('size_sqft')) if request.form.get('size_sqft') else None
-            
-            start_date_str = request.form.get('start_date')
-            end_date_str = request.form.get('end_date')
-            contract.start_date = datetime.strptime(start_date_str, '%Y-%m-%d') if start_date_str else None
-            contract.end_date = datetime.strptime(end_date_str, '%Y-%m-%d') if end_date_str else None
-            
-            contract.description = request.form.get('description', '')
-            contract.seller_kakao = request.form.get('seller_kakao', '')
-            contract.seller_instagram = request.form.get('seller_instagram', '')
-            contract.seller_phone = request.form.get('seller_phone', '')
-
-            # 옵션 업데이트 (기존 옵션 삭제 후 새로 추가)
-            RoomOption.query.filter_by(contract_id=contract.id).delete()
-            options = request.form.getlist('options')
-            for option_name in options:
-                new_option = RoomOption(contract_id=contract.id, option_name=option_name)
-                db.session.add(new_option)
-
-            db.session.commit()
-            flash('매물 정보가 성공적으로 수정되었습니다.', 'success')
-            return redirect(url_for('contract.detail', contract_id=contract.id))
+    if request.method == 'POST':
+        current_app.logger.info(f"Edit contract POST request for ID: {contract_id}")
+        # POST 요청 시에는 request.form 데이터로 폼을 다시 채우고 유효성 검사를 수행
+        # form = ContractForm(request.form, obj=contract) # 이렇게 하면 obj가 덮어써질 수 있음
+        # form = ContractForm(request.form) # 이렇게 하면 기존 contract 정보가 날아감
+        # 올바른 방법은 validate_on_submit()이 내부적으로 request.form을 사용하도록 하는 것
+        # 또는 명시적으로 form = ContractForm(request.form, obj=contract) 후 form.process()
         
-        except Exception as e:
-            db.session.rollback()
-            current_app.logger.error(f"매물 수정 오류: {e}")
-            flash('매물 수정 중 오류가 발생했습니다. 다시 시도해주세요.', 'error')
+        # WTForms는 validate_on_submit() 호출 시 request.form의 데이터로 폼을 채웁니다.
+        # obj=contract는 GET 요청 시 초기값을 채우는 데 주로 사용되며,
+        # POST 시에는 폼 필드에 제출된 값으로 덮어써집니다.
+        # 그러나 populate_obj 전에 form 인스턴스를 request.form으로 다시 만드는 것이 안전할 수 있습니다.
+        # form = ContractForm(request.form, obj=contract) # 이렇게 하면 populate_obj 전에 폼 데이터가 반영됨
 
-    # GET 요청 시
-    # 현재 계약에 선택된 옵션들을 가져옵니다.
+        if form.validate_on_submit():
+            current_app.logger.info("Form validation successful.")
+            try:
+                # 1. 폼 데이터로 기본 정보 업데이트
+                form.populate_obj(contract)
+                # BooleanField는 populate_obj로 잘 안될 수 있으므로 수동 처리
+                contract.roommate_allowed = form.roommate_allowed.data
+                current_app.logger.info("Contract object populated from form.")
+
+                # 2. 옵션 업데이트 (기존 옵션 삭제 후 새로 추가)
+                RoomOption.query.filter_by(contract_id=contract.id).delete()
+                selected_option_names = request.form.getlist('options') # edit.html 템플릿의 옵션 필드 name이 'options'여야 함
+                for option_name in selected_option_names:
+                    new_option = RoomOption(contract_id=contract.id, option_name=option_name)
+                    db.session.add(new_option)
+                current_app.logger.info(f"Options updated: {selected_option_names}")
+
+                # 3. 사진 업로드 처리
+                uploaded_files = form.photos.data # MultipleFileField는 data 속성으로 파일 리스트를 반환
+                if uploaded_files:
+                    current_app.logger.info(f"Processing {len(uploaded_files)} uploaded photos.")
+                    # 기존 사진 삭제 로직 (필요하다면 여기에 추가)
+                    # ContractPhoto.query.filter_by(contract_id=contract.id).delete() # 예시: 모든 기존 사진 삭제
+
+                    upload_dir = os.path.join(current_app.static_folder, 'uploads')
+                    if not os.path.exists(upload_dir):
+                        os.makedirs(upload_dir)
+
+                    for photo_file_storage in uploaded_files:
+                        if photo_file_storage and allowed_file(photo_file_storage.filename):
+                            filename = secure_filename(photo_file_storage.filename)
+                            unique_filename = f"{str(uuid.uuid4())}_{filename}"
+                            file_path = os.path.join(upload_dir, unique_filename)
+                            photo_file_storage.save(file_path)
+                            
+                            new_photo = ContractPhoto(
+                                file_id=unique_filename, # 실제 저장된 파일명 (경로 제외)
+                                contract_id=contract.id,
+                                filepath=f'uploads/{unique_filename}' # static 기준 경로
+                            )
+                            db.session.add(new_photo)
+                            current_app.logger.info(f"Photo saved: {unique_filename}")
+                        elif photo_file_storage: # 파일이 있지만 허용되지 않은 확장자인 경우
+                            current_app.logger.warning(f"Skipped disallowed file: {photo_file_storage.filename}")
+
+
+                db.session.commit()
+                current_app.logger.info("Database commit successful.")
+                flash('매물 정보가 성공적으로 수정되었습니다.', 'success')
+                return redirect(url_for('contract.detail', contract_id=contract.id))
+            
+            except Exception as e:
+                db.session.rollback()
+                current_app.logger.error(f"Error during contract update: {e}", exc_info=True)
+                flash('매물 수정 중 오류가 발생했습니다. 다시 시도해주세요.', 'error')
+        else:
+            # 유효성 검사 실패
+            current_app.logger.warning(f"Contract edit form validation failed. Errors: {form.errors}")
+            # flash_form_errors(form) # flash_form_errors 함수가 있다면 사용
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(f"{getattr(form, field).label.text} 필드 오류: {error}", 'error')
+
+
+    # GET 요청 또는 유효성 검사 실패 시 템플릿 렌더링
     current_options = RoomOption.query.filter_by(contract_id=contract.id).all()
     selected_options = [option.option_name for option in current_options]
-
     google_maps_api_key = current_app.config.get('GOOGLE_MAPS_API_KEY', '')
+    
+    # form 인스턴스는 GET 요청 시 obj=contract로 초기화되었거나,
+    # POST 실패 시 제출된 데이터와 오류를 포함하고 있음.
     return render_template('contract/edit.html', 
                            form=form, 
                            contract=contract, 
-                           selected_options=selected_options,  # 선택된 옵션 전달
+                           selected_options=selected_options,
                            google_maps_api_key=google_maps_api_key)
 
 
@@ -610,9 +649,9 @@ def confirm_delete(contract_id):
 def delete_contract(contract_id):
     """매물 삭제 처리"""
     contract = Contract.query.get_or_404(contract_id)
-    
-    # 작성자만 삭제 가능
-    if contract.posted_by != current_user.id:
+
+    # 작성자 또는 관리자만 삭제 가능
+    if contract.posted_by != current_user.id and not current_user.is_admin:
         abort(403)
     
     form = ContractForm()

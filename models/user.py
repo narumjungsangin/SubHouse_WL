@@ -23,6 +23,11 @@ class User(db.Model, UserMixin):
     posted_contracts = db.relationship('Contract', foreign_keys='Contract.posted_by', back_populates='poster')
     modified_contracts = db.relationship('Contract', foreign_keys='Contract.modified_by', back_populates='modifier')
     likes = db.relationship('Like', back_populates='user')
+
+    @property
+    def is_admin(self):
+        """임시 관리자 확인: 특정 이메일 주소를 관리자로 간주합니다."""
+        return self.email == 'joonst26@gmail.com'
     
     __table_args__ = (
         db.Index('idx_user_email', 'email'),
@@ -46,5 +51,6 @@ class User(db.Model, UserMixin):
             'nationality': self.nationality,
             'phone_number': self.phone_number,
             'account_status': self.account_status,
+            'is_admin': self.is_admin,
             'created_at': self.created_at.isoformat() if self.created_at else None
         }

@@ -5,6 +5,7 @@
 {% block content %}
 <div class="max-w-7xl mx-auto">
   <div class="text-center mb-12">
+    
     <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ _('당신의 이상적인 집을 찾아보세요') }}</h1>
     <p class="text-xl text-gray-600">{{ _('간편하게 매물을 등록하고 찾을 수 있는 SubHouse와 함께하세요') }}</p>
 
@@ -22,8 +23,8 @@
     <br>
 
     <div class="max-w-3xl mx-auto px-6 py-12 bg-white shadow-xl rounded-2xl">
-      <h1 class="text-4xl font-bold text-center text-blue-800 mb-8">🏠 {{ _('SubHouse에 오신 것을 환영합니다') }}</h1>
-
+      
+      <img src="{{ url_for('static', filename='images/subhouse_logo.png') }}" alt="SubHouse Logo" class="mx-auto mb-8 w-32 sm:w-40 md:w-52 lg:w-64">
       <p class="text-gray-700 text-lg mb-6 leading-relaxed">
         {{ _('SubHouse는 퍼듀대학교 학생들을 위한 서브리스(sublease) 매물 공유 플랫폼입니다. 퍼듀 지역에서 방을 찾고 있는 학생이나, 양도하려는 학생 모두 쉽게 매물을 검색하고 등록할 수 있습니다.') }}
       </p>

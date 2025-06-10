@@ -30,7 +30,10 @@
             <div class="bg-white rounded-lg shadow-md p-6">
                 <h2 class="text-xl font-semibold mb-4">{{ _('기본 정보') }}</h2>
                 
-                {% include 'contract/_basic_info_form.html' %}
+                {# Pass the form object to the basic info form partial #}
+                {% with form=form, contract=contract %}
+                    {% include 'contract/_basic_info_form.html' %}
+                {% endwith %}
             </div>
 
             <!-- 상세 정보 섹션 -->
@@ -39,111 +42,98 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label for="room_count" class="block text-sm font-medium text-gray-700 mb-1">{{ _('방 수') }}</label>
-                        <input type="number" id="room_count" name="room_count" 
-                               value="{{ contract.room_count }}" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        {{ form.room_count.label(class="block text-sm font-medium text-gray-700 mb-1") }}
+                        {{ form.room_count(class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500") }}
+                        {% if form.room_count.errors %}
+                            <ul class="text-red-500 text-xs italic mt-1">
+                                {% for error in form.room_count.errors %}<li>{{ error }}</li>{% endfor %}
+                            </ul>
+                        {% endif %}
                     </div>
                     
                     <div>
-                        <label for="bathroom_count" class="block text-sm font-medium text-gray-700 mb-1">{{ _('화장실 수') }}</label>
-                        <input type="number" id="bathroom_count" name="bathroom_count" 
-                               value="{{ contract.bathroom_count }}" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        {{ form.bathroom_count.label(class="block text-sm font-medium text-gray-700 mb-1") }}
+                        {{ form.bathroom_count(class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500") }}
+                        {% if form.bathroom_count.errors %}
+                            <ul class="text-red-500 text-xs italic mt-1">
+                                {% for error in form.bathroom_count.errors %}<li>{{ error }}</li>{% endfor %}
+                            </ul>
+                        {% endif %}
                     </div>
                     
-                    {% with field_name='floor', field_label=_('층'), field_value=contract.floor %}
-                        {% include 'contract/_form_fields.html' %}
-                    {% endwith %}
+                    {# Pass the form field object to the form_fields partial #}
+                    {% with field=form.floor %}{% include 'contract/_form_fields.html' %}{% endwith %}
                     
-                    {% with field_name='size_sqft', field_label=_('면적 (평방피트)'), field_value=contract.size_sqft %}
-                        {% include 'contract/_form_fields.html' %}
-                    {% endwith %}
+                    {% with field=form.size_sqft %}{% include 'contract/_form_fields.html' %}{% endwith %}
                 </div>
 
                 <div class="mt-4">
                     <label class="flex items-center">
-                        <input type="checkbox" id="roommate_allowed" name="roommate_allowed" 
-                               {% if contract.roommate_allowed %}checked{% endif %}
-                               class="mr-2">
-                        <span class="text-gray-700">{{ _('룸메이트 허용') }}</span>
+                        {{ form.roommate_allowed(class="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded") }}
+                        {{ form.roommate_allowed.label(class="text-gray-700") }}
                     </label>
+                    {% if form.roommate_allowed.errors %}
+                        <ul class="text-red-500 text-xs italic mt-1">
+                            {% for error in form.roommate_allowed.errors %}<li>{{ error }}</li>{% endfor %}
+                        </ul>
+                    {% endif %}
                 </div>
 
                 <div class="mt-4">
-                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">{{ _('설명') }}</label>
-                    <textarea id="description" name="description" rows="4"
-                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">{{ contract.description }}</textarea>
+                    {{ form.description.label(class="block text-sm font-medium text-gray-700 mb-1") }}
+                    {{ form.description(rows="4", class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500") }}
+                    {% if form.description.errors %}
+                        <ul class="text-red-500 text-xs italic mt-1">
+                            {% for error in form.description.errors %}<li>{{ error }}</li>{% endfor %}
+                        </ul>
+                    {% endif %}
                 </div>
             </div>
 
             <!-- 옵션 섹션 -->
             <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-3">{{ _('옵션') }}</h3>
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
-                        <input type="checkbox" name="options" value="에어컨" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '에어컨' in selected_options %}checked{% endif %}>
-                        {{ _('에어컨') }}
+                    {% set available_options = ['에어컨', '세탁기', '냉장고', '전자레인지', 'TV', '인터넷', '가구 포함', '침대', '주차장', '엘리베이터', '보안시스템', '애완동물 가능'] %}
+                    {% for option_key in available_options %}
+                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm hover:bg-gray-50 cursor-pointer">
+                        <input type="checkbox" name="options" value="{{ option_key }}" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if option_key in selected_options %}checked{% endif %}>
+                        {{ _(option_key) }}
                     </label>
-                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
-                        <input type="checkbox" name="options" value="세탁기" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '세탁기' in selected_options %}checked{% endif %}>
-                        {{ _('세탁기, 건조기') }}
-                    </label>
-                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
-                        <input type="checkbox" name="options" value="냉장고" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '냉장고' in selected_options %}checked{% endif %}>
-                        {{ _('냉장고') }}
-                    </label>
-                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
-                        <input type="checkbox" name="options" value="전자레인지" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '전자레인지' in selected_options %}checked{% endif %}>
-                        {{ _('전자레인지') }}
-                    </label>
-                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
-                        <input type="checkbox" name="options" value="TV" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if 'TV' in selected_options %}checked{% endif %}>
-                        {{ _('TV') }}
-                    </label>
-                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
-                        <input type="checkbox" name="options" value="인터넷" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '인터넷' in selected_options %}checked{% endif %}>
-                        {{ _('인터넷') }}
-                    </label>
-                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
-                        <input type="checkbox" name="options" value="가구 포함" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '가구 포함' in selected_options %}checked{% endif %}>
-                        {{ _('가구 포함') }}
-                    </label>
-                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
-                        <input type="checkbox" name="options" value="침대" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '침대' in selected_options %}checked{% endif %}>
-                        {{ _('침대') }}
-                    </label>
-                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
-                        <input type="checkbox" name="options" value="주차장" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '주차장' in selected_options %}checked{% endif %}>
-                        {{ _('주차장') }}
-                    </label>
-                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
-                        <input type="checkbox" name="options" value="엘리베이터" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '엘리베이터' in selected_options %}checked{% endif %}>
-                        {{ _('엘리베이터') }}
-                    </label>
-                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
-                        <input type="checkbox" name="options" value="보안시스템" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '보안시스템' in selected_options %}checked{% endif %}>
-                        {{ _('보안시스템') }}
-                    </label>
-                    <label class="inline-flex items-center bg-white px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm">
-                        <input type="checkbox" name="options" value="애완동물 가능" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-2" {% if '애완동물 가능' in selected_options %}checked{% endif %}>
-                        {{ _('애완동물 가능') }}
-                    </label>
+                    {% endfor %}
                 </div>
+            </div>
 
             <!-- 사진 업로드 섹션 -->
             <div class="bg-white rounded-lg shadow-md p-6">
                 <h2 class="text-xl font-semibold mb-4">{{ _('사진 업로드') }}</h2>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ _('사진 추가') }}</label>
-                        <input type="file" id="photos" name="photos" multiple
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                {% if contract.photos %}
+                <div class="mb-4">
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">{{ _('현재 사진') }}</h3>
+                    <div class="flex flex-wrap gap-4">
+                        {% for photo in contract.photos %}
+                        <div class="relative group">
+                            <img src="{{ url_for('static', filename='uploads/' + photo.photo_url) }}" alt="{{ _('매물 사진') }}" class="h-24 w-24 object-cover rounded-md">
+                        </div>
+                        {% endfor %}
                     </div>
+                </div>
+                {% endif %}
+
+                <div>
+                    {{ form.photos.label(class="block text-sm font-medium text-gray-700 mb-1") }}
+                    {{ form.photos(class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500", multiple="multiple") }}
+                    {% if form.photos.errors %}
+                        <ul class="text-red-500 text-xs italic mt-1">
+                            {% for error in form.photos.errors %}<li>{{ error }}</li>{% endfor %}
+                        </ul>
+                    {% endif %}
+                    <p class="text-xs text-gray-500 mt-1">{{ _('여러 장의 사진을 선택할 수 있습니다. 기존 사진은 유지되며, 새 사진을 추가하면 기존 사진에 더해집니다. 사진을 삭제하려면 별도의 기능이 필요합니다.') }}</p>
                 </div>
             </div>
 
-            <!-- 작성자 정보 섹션 -->
+            <!-- 작성자 정보 섹션 (Commented out as in original) -->
             <!-- <div class="bg-white rounded-lg shadow-md p-6">
                 <h2 class="text-xl font-semibold mb-4">{{ _('작성자 정보') }}</h2>
                 

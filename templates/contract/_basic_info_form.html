@@ -13,8 +13,8 @@
                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                placeholder="{{ _('주소를 입력하세요') }}"
                value="{{ contract.location if contract else '' }}">
-        <input type="hidden" id="latitude" name="latitude" value="{{ contract.latitude if contract else '' }}">
-        <input type="hidden" id="longitude" name="longitude" value="{{ contract.longitude if contract else '' }}">
+        <input type="hidden" id="latitude" name="latitude" value="{{ contract.latitude if contract and contract.latitude is not none else '' }}">
+        <input type="hidden" id="longitude" name="longitude" value="{{ contract.longitude if contract and contract.longitude is not none else '' }}">
         
         <div id="map" class="h-60 mt-3 rounded-md border border-gray-300"></div>
     </div>
