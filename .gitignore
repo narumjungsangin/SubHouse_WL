@@ -39,7 +39,7 @@ dist/
 .windsurf/
 
 # Project specific
-/uploads
+static/uploads
 memory/
 tasks.json
 .pylintrc

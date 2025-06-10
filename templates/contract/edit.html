@@ -30,7 +30,7 @@
             <div class="bg-white rounded-lg shadow-md p-6">
                 <h2 class="text-xl font-semibold mb-4">{{ _('기본 정보') }}</h2>
                 
-                {% include 'contract/_basic_info_form.html' with contract=contract %}
+                {% include 'contract/_basic_info_form.html' %}
             </div>
 
             <!-- 상세 정보 섹션 -->
@@ -52,9 +52,13 @@
                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     
-                    {% include 'contract/_form_fields.html' with field_name='floor' field_label=_('층') field_value=contract.floor %}
+                    {% with field_name='floor', field_label=_('층'), field_value=contract.floor %}
+                        {% include 'contract/_form_fields.html' %}
+                    {% endwith %}
                     
-                    {% include 'contract/_form_fields.html' with field_name='size_sqft' field_label=_('면적 (평방피트)') field_value=contract.size_sqft %}
+                    {% with field_name='size_sqft', field_label=_('면적 (평방피트)'), field_value=contract.size_sqft %}
+                        {% include 'contract/_form_fields.html' %}
+                    {% endwith %}
                 </div>
 
                 <div class="mt-4">
@@ -176,8 +180,4 @@
         </form>
     </div>
 </div>
-
-{% block head_extra %}
-    <script src="{{ url_for('static', filename='maps.js') }}"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initMap"></script>
 {% endblock %}

@@ -15,28 +15,26 @@ from models.room_option import RoomOption
 from models.like import Like
 
 class ContractForm(FlaskForm):
-    pass  # CSRF 토큰을 자동으로 처리
+    house_name = StringField('건물명', validators=[Optional()])
+    location = StringField('위치', validators=[DataRequired()])
+    latitude = FloatField('위도', validators=[DataRequired()])
+    longitude = FloatField('경도', validators=[DataRequired()])
+    room_count = IntegerField('방 개수', validators=[DataRequired()])
+    bathroom_count = FloatField('화장실 개수', validators=[DataRequired()])
+    roommate_allowed = BooleanField('룸메이트 허용')
+    start_date = DateField('계약 시작일', format='%Y-%m-%d', validators=[Optional()])
+    end_date = DateField('계약 종료일', format='%Y-%m-%d', validators=[Optional()])
+    monthly_rent_usd = FloatField('월세 (달러)', validators=[DataRequired()])
+    deposit_usd = FloatField('보증금 (달러)', validators=[Optional()])
+    description = TextAreaField('설명', validators=[Optional()])
+    seller_kakao = StringField('카카오톡 아이디', validators=[Optional()])
+    seller_phone = StringField('전화번호', validators=[Optional()])
+    seller_instagram = StringField('인스타그램 아이디', validators=[Optional()])
+    # CSRF 토큰은 FlaskForm에서 자동으로 처리됩니다.
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # 기본 필드 추가
-        self.fields = {
-            'house_name': StringField('건물명', validators=[Optional()]),
-            'location': StringField('위치', validators=[DataRequired()]),
-            'latitude': FloatField('위도', validators=[DataRequired()]),
-            'longitude': FloatField('경도', validators=[DataRequired()]),
-            'room_count': IntegerField('방 개수', validators=[DataRequired()]),
-            'bathroom_count': FloatField('화장실 개수', validators=[DataRequired()]),
-            'roommate_allowed': BooleanField('룸메이트 허용'),
-            'start_date': DateField('계약 시작일', format='%Y-%m-%d', validators=[Optional()]),
-            'end_date': DateField('계약 종료일', format='%Y-%m-%d', validators=[Optional()]),
-            'monthly_rent_usd': FloatField('월세 (달러)', validators=[DataRequired()]),
-            'deposit_usd': FloatField('보증금 (달러)', validators=[Optional()]),
-            'description': TextAreaField('설명', validators=[Optional()]),
-            'seller_kakao': StringField('카카오톡 아이디', validators=[Optional()]),
-            'seller_phone': StringField('전화번호', validators=[Optional()]),
-            'seller_instagram': StringField('인스타그램 아이디', validators=[Optional()])
-        }
+    # __init__ 메소드는 특별한 로직이 없다면 생략 가능합니다.
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
 
 contract_bp = Blueprint('contract', __name__, url_prefix='/contract')
 
@@ -137,7 +135,7 @@ def create_step3():
             'room_count': request.form.get('room_count', ''),
             'bathroom_count': request.form.get('bathroom_count', ''),
             'floor': request.form.get('floor', ''),
-            'roommate_allowed': 'roommate_allowed' in request.form,
+            'roommate_allowed': request.form.get('roommate_allowed') == 'True',
             'size_sqft': request.form.get('size_sqft', ''),
             'start_date': request.form.get('start_date', ''),
             'end_date': request.form.get('end_date', ''),
@@ -546,8 +544,16 @@ def edit_contract(contract_id):
             flash('매물 수정 중 오류가 발생했습니다. 다시 시도해주세요.', 'error')
 
     # GET 요청 시
+    # 현재 계약에 선택된 옵션들을 가져옵니다.
+    current_options = RoomOption.query.filter_by(contract_id=contract.id).all()
+    selected_options = [option.option_name for option in current_options]
+
     google_maps_api_key = current_app.config.get('GOOGLE_MAPS_API_KEY', '')
-    return render_template('contract/edit.html', form=form, contract=contract, google_maps_api_key=google_maps_api_key)
+    return render_template('contract/edit.html', 
+                           form=form, 
+                           contract=contract, 
+                           selected_options=selected_options,  # 선택된 옵션 전달
+                           google_maps_api_key=google_maps_api_key)
 
 
 @contract_bp.route('/like/<int:contract_id>', methods=['POST'])
