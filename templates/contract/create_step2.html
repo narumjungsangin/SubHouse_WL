@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    <form hx-post="{{ url_for('contract.create_step2') }}" hx-target="#form-container" hx-swap="innerHTML"
+    <form hx-post="{{ url_for('contract.create_step2', lang=CURRENT_LANGUAGE) }}" hx-target="#form-container" hx-swap="innerHTML"
         class="space-y-6">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 

@@ -20,7 +20,7 @@ class ContractForm(FlaskForm):
     location = StringField('위치', validators=[DataRequired()])
     latitude = FloatField('위도', validators=[Optional()])
     longitude = FloatField('경도', validators=[Optional()])
-    room_count = IntegerField('방 개수', validators=[DataRequired()])
+    room_count = IntegerField('방 개수', validators=[Optional()])
     bathroom_count = FloatField('화장실 개수', validators=[DataRequired()])
     roommate_allowed = BooleanField('룸메이트 허용')
     start_date = DateField('계약 시작일', format='%Y-%m-%d', validators=[Optional()])
@@ -518,7 +518,7 @@ def edit_contract(contract_id):
         contract.location = form.location.data
         contract.latitude = form.latitude.data
         contract.longitude = form.longitude.data
-        contract.room_count = form.room_count.data
+        contract.room_count = form.room_count.data if form.room_count.data is not None else 0
         contract.bathroom_count = form.bathroom_count.data
         contract.roommate_allowed = form.roommate_allowed.data
         contract.start_date = form.start_date.data
@@ -577,14 +577,31 @@ def edit_contract(contract_id):
 
     google_maps_api_key = current_app.config.get('GOOGLE_MAPS_API_KEY', '')
     option_names = ['furnished', 'parking', 'laundry', 'ac', 'wifi', 'kitchen', 'elevator', 'pets_allowed']
-    current_options = {opt.option_name for opt in contract.room_options}
+    current_app.logger.debug(f"Request method: {request.method}")
+    if request.method == 'POST':
+        current_app.logger.debug(f"Form data on POST: {request.form}")
+        current_app.logger.debug(f"Submitted options on POST: {request.form.getlist('options')}")
+        current_app.logger.debug(f"Form errors: {form.errors}")
+
+    # Determine current_options based on request method and validation status
+    if request.method == 'POST' and form.errors:
+        # If POST and form has errors, use submitted options
+        current_options_for_template = set(request.form.getlist('options'))
+        current_app.logger.debug(f"[POST with errors] Using submitted options for template: {current_options_for_template}")
+    else:
+        # For GET requests or successful POST (though success leads to redirect),
+        # use options from the database
+        db_options = {opt.option_name for opt in contract.room_options}
+        current_app.logger.debug(f"[GET or POST success] Options from DB: {db_options}")
+        current_options_for_template = db_options
+        current_app.logger.debug(f"[GET or POST success] Using DB options for template: {current_options_for_template}")
     
     return render_template('contract/edit.html', 
                            form=form, 
                            contract=contract, 
                            google_maps_api_key=google_maps_api_key,
                            option_names=option_names,
-                           current_options=current_options)
+                           selected_options=current_options_for_template)
 
 @contract_bp.route('/delete_photo/<int:photo_id>', methods=['POST'])
 @login_required

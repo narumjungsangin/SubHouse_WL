@@ -149,15 +149,12 @@
                 <div>
                     <h3 class="text-lg font-semibold mb-2">{{ _('매물 옵션') }}</h3>
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                        {% for option in options %}
+                        {% for option in contract.room_options %}
                         <div class="flex items-center bg-gray-50 p-2 rounded">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 mr-2"
-                                viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                    clip-rule="evenodd" />
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                             </svg>
-                            <span>{{ option.option_name }}</span>
+                            <span class="text-sm text-gray-800">{{ _(option.option_name) }}</span>
                         </div>
                         {% else %}
                         <p class="col-span-3 text-gray-500">{{ _('등록된 옵션이 없습니다.') }}</p>

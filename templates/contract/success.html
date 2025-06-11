@@ -11,7 +11,7 @@
     
     <div class="space-y-4">
         <p class="text-sm text-gray-600">
-            {{ _('등록된 매물은') }} <a href="{{ url_for('main.index') }}" class="text-blue-600 hover:underline">{{ _('홈페이지') }}</a>{{ _('에서 확인하실 수 있습니다.') }}
+            {% trans homepage_link=url_for('main.index') %}등록된 매물은 <a href="{{ homepage_link }}" class="text-blue-600 hover:underline">홈페이지</a>에서 확인하실 수 있습니다.{% endtrans %}
         </p>
         
         <div class="pt-6 flex justify-center space-x-4">

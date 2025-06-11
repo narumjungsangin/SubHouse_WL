@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: joonst26@gmail.com\n"
-"POT-Creation-Date: 2025-06-08 09:04-0400\n"
+"POT-Creation-Date: 2025-06-11 03:11-0400\n"
 "PO-Revision-Date: 2025-06-08 00:14-0400\n"
 "Last-Translator: Junsu Yoon <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,94 +18,197 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
+#: templates/aboutUs.html:3
+msgid "SubHouse - About Us"
+msgstr "SubHouse - About Us"
+
+#: templates/aboutUs.html:8
+msgid "About SubHouse"
+msgstr "About SubHouse"
+
+#: templates/aboutUs.html:10
+msgid ""
+"This project was developed as part of a one-day challenge on June 3rd to "
+"create a complete project. Currently, only the MVP (Minimum Viable "
+"Product) stage is implemented."
+msgstr ""
+"This project was developed as part of a one-day challenge on June 3rd to "
+"create a complete project. Currently, only the MVP (Minimum Viable "
+"Product) stage is implemented."
+
+#: templates/aboutUs.html:15
+msgid "Meet the Team"
+msgstr "Meet the Team"
+
+#: templates/aboutUs.html:19
+msgid "이서형"
+msgstr "Seohyung Lee"
+
+#: templates/aboutUs.html:20 templates/aboutUs.html:35
+msgid "GitHub"
+msgstr "GitHub"
+
+#: templates/aboutUs.html:21 templates/aboutUs.html:36
+msgid "Role"
+msgstr "Role"
+
+#: templates/aboutUs.html:21
+msgid "Development"
+msgstr "Development"
+
+#: templates/aboutUs.html:23 templates/aboutUs.html:38
+msgid "Implemented Features"
+msgstr "Implemented Features"
+
+#: templates/aboutUs.html:25
+msgid "Login/Signup"
+msgstr "Login/Signup"
+
+#: templates/aboutUs.html:26
+msgid "Homepage UI"
+msgstr "Homepage UI"
+
+#: templates/aboutUs.html:27
+msgid "API Integration"
+msgstr "API Integration"
+
+#: templates/aboutUs.html:34
+msgid "윤준수"
+msgstr "Junsu Yoon"
+
+#: templates/aboutUs.html:36
+msgid "Planning & Backend"
+msgstr "Planning & Backend"
+
+#: templates/aboutUs.html:40
+msgid "Database Design and Setup"
+msgstr "Database Design and Setup"
+
+#: templates/aboutUs.html:41
+msgid "Post-MVP Management"
+msgstr "Post-MVP Management"
+
+#: templates/aboutUs.html:49
+msgid ""
+"SubHouse is dedicated to providing a simple and effective platform for "
+"Purdue students."
+msgstr ""
+"SubHouse is dedicated to providing a simple and effective platform for "
+"Purdue students."
+
 # 랜딩 페이지
 #: templates/index.html:3
 msgid "SubHouse - 당신의 이상적인 집을 찾아보세요"
 msgstr "SubHouse - Find Your Ideal Home"
 
 # 랜딩 페이지
-#: templates/index.html:8
+#: templates/index.html:9
 msgid "당신의 이상적인 집을 찾아보세요"
 msgstr "Find your ideal Sublease"
 
-#: templates/index.html:9
+#: templates/index.html:10
 msgid "간편하게 매물을 등록하고 찾을 수 있는 SubHouse와 함께하세요"
 msgstr ""
 "Find your ideal Sublease with SubHouse, the easy way to register and find"
 " properties."
 
-#: templates/contract/create_final.html:138 templates/index.html:14
+#: templates/contract/create_final.html:167 templates/index.html:15
 msgid "매물 등록하기"
 msgstr "Register a property"
 
-#: templates/index.html:18
+#: templates/index.html:19
 msgid "매물 찾아보기"
 msgstr "Find a property"
 
-#: templates/index.html:89
-msgid "최근 등록된 매물"
-msgstr "Recently Added Properties"
+#: templates/index.html:29
+msgid ""
+"SubHouse는 퍼듀대학교 학생들을 위한 서브리스(sublease) 매물 공유 플랫폼입니다. 퍼듀 지역에서 방을 찾고 있는 "
+"학생이나, 양도하려는 학생 모두 쉽게 매물을 검색하고 등록할 수 있습니다."
+msgstr ""
+"SubHouse is a sublease listing platform for Purdue students. Whether "
+"you're looking for a place or trying to sublet, you can easily browse and"
+" post listings."
 
-#: templates/contract/detail.html:107 templates/index.html:121
-msgid "정보 없음"
-msgstr "Not available"
+#: templates/index.html:33
+msgid "누구나 사용하기 쉽도록 설계된 이 플랫폼은 무료이며 구글 로그인 후 이용하실 수 있습니다. 다만, 아래 주의사항을 꼭 숙지해주세요."
+msgstr ""
+"This platform is free and easy to use with Google login. Please read the "
+"following notes carefully."
 
-#: templates/index.html:147
-msgid "현재 등록된 매물이 없습니다."
-msgstr "No properties currently listed."
+#: templates/index.html:38
+msgid "이용 시 주의사항"
+msgstr "Important Notes"
 
-#: templates/index.html:150
-msgid "첫 매물 등록하기"
-msgstr "Register new property"
+#: templates/index.html:40
+msgid "SubHouse는 매물 소개 용도로만 사용되어야 하며, 그 외의 용도는 엄격히 금지됩니다."
+msgstr ""
+"SubHouse is strictly for listing/viewing sublease properties only. Any "
+"other use is prohibited."
 
-#: templates/contract/create.html:3 templates/contract/create.html:16
+#: templates/index.html:41
+msgid "매물에 대한 자세한 문의는 작성자가 남긴 연락처를 통해 직접 진행해 주세요."
+msgstr ""
+"For questions about a property, please contact the listing owner directly"
+" via their provided info."
+
+#: templates/index.html:42
+msgid "모든 거래에 대한 법적 책임은 이용자 본인에게 있으며, SubHouse는 책임을 지지 않습니다."
+msgstr ""
+"All legal responsibilities lie with the users. SubHouse holds no "
+"liability."
+
+#: templates/index.html:48
+msgid "문의사항이나 피드백이 있으시면 아래 이메일로 연락해주세요."
+msgstr "For questions or feedback, please contact us at the email below."
+
+#: templates/contract/_basic_info_form.html:3
+msgid "매물 이름 *"
+msgstr "Property name *"
+
+#: templates/contract/_basic_info_form.html:6
+msgid "예: Trailside Flats"
+msgstr "Example: Trailside Flats"
+
+#: templates/contract/_basic_info_form.html:11
+msgid "위치 *"
+msgstr "Location *"
+
+#: templates/contract/_basic_info_form.html:14
+msgid "주소를 입력하세요"
+msgstr "Enter the address"
+
+#: templates/contract/_basic_info_form.html:23
+msgid "월세 (USD) *"
+msgstr "Monthly rent (USD) *"
+
+#: templates/contract/_basic_info_form.html:34
+msgid "보증금 (USD)"
+msgstr "Deposit (USD)"
+
+#: templates/contract/create.html:3 templates/contract/create.html:17
 #: templates/contract/create_step2.html:2
-#: templates/contract/create_step3.html:2 templates/partials/navigation.html:12
+#: templates/contract/create_step3.html:2 templates/partials/navigation.html:14
 msgid "매물 등록"
 msgstr "Register property"
 
-#: templates/contract/create.html:24 templates/contract/create_final.html:33
+#: templates/contract/create.html:25 templates/contract/create_final.html:33
 #: templates/contract/create_step2.html:10
-#: templates/contract/create_step3.html:10 templates/contract/edit.html:25
+#: templates/contract/create_step3.html:10 templates/contract/edit.html:31
 msgid "기본 정보"
 msgstr "Basic Information"
 
-#: templates/contract/create.html:30 templates/contract/create_final.html:61
+#: templates/contract/create.html:31 templates/contract/create_final.html:62
 #: templates/contract/create_step2.html:16
-#: templates/contract/create_step3.html:16 templates/contract/edit.html:60
+#: templates/contract/create_step3.html:16 templates/contract/edit.html:41
 msgid "상세 정보"
 msgstr "Detail Information"
 
-#: templates/contract/create.html:36 templates/contract/create_step2.html:22
+#: templates/contract/create.html:37 templates/contract/create_step2.html:22
 #: templates/contract/create_step3.html:22
 msgid "옵션 및 사진"
 msgstr "Options and Photos"
 
-#: templates/contract/create.html:49
-msgid "매물 이름 *"
-msgstr "Property name *"
-
-#: templates/contract/create.html:52
-msgid "예: Trailside Flats"
-msgstr "Example: Trailside Flats"
-
-#: templates/contract/create.html:56
-msgid "위치 *"
-msgstr "Location *"
-
-#: templates/contract/create.html:59
-msgid "주소를 입력하세요"
-msgstr "Enter the address"
-
-#: templates/contract/create.html:67
-msgid "월세 (USD) *"
-msgstr "Monthly rent (USD) *"
-
-#: templates/contract/create.html:77
-msgid "유틸 평균가격 (USD)"
-msgstr "Average utility price (USD)"
-
-#: templates/contract/create.html:129 templates/contract/create_step2.html:100
+#: templates/contract/create.html:52 templates/contract/create_step2.html:100
 msgid "다음 단계"
 msgstr "Next step"
 
@@ -123,7 +226,7 @@ msgstr ""
 msgid "매물 이름"
 msgstr "Property Name"
 
-#: templates/contract/create_final.html:41 templates/contract/edit.html:36
+#: templates/contract/create_final.html:41
 msgid "위치"
 msgstr "Location"
 
@@ -135,87 +238,94 @@ msgstr "Rent"
 msgid "유틸리티"
 msgstr "Utilities"
 
-#: templates/contract/create_final.html:65
-msgid "방 개수(Studio 시 0개)"
-msgstr "Number of Rooms(For Studio: 0)"
+#: templates/contract/create_final.html:66
+#, fuzzy
+msgid "방 개수"
+msgstr "Number of Rooms"
 
-#: templates/contract/create_final.html:69
+#: templates/contract/create_final.html:70
 msgid "화장실 개수"
 msgstr "Number of Bathrooms"
 
-#: templates/contract/create_final.html:74
-#: templates/contract/create_step2.html:59 templates/contract/detail.html:107
-#: templates/contract/edit.html:78
+#: templates/contract/create_final.html:75
+#: templates/contract/create_step2.html:59 templates/contract/detail.html:113
 msgid "층"
 msgstr "Floor"
 
-#: templates/contract/create_final.html:80
+#: templates/contract/create_final.html:81
 msgid "크기"
 msgstr "Size"
 
-#: templates/contract/create_final.html:85 templates/contract/detail.html:62
-msgid "계약 기간"
-msgstr "Contract Period"
+#: templates/contract/create_final.html:87
+#, fuzzy
+msgid "계약 시작일"
+msgstr "Contract start date *"
 
-#: templates/contract/create_final.html:86 templates/contract/detail.html:67
-#: templates/contract/detail.html:73
-msgid "미정"
-msgstr "Not Decided"
+#: templates/contract/create_final.html:94
+#, fuzzy
+msgid "계약 종료일"
+msgstr "Contract end date *"
 
-#: templates/contract/create_final.html:89
+#: templates/contract/create_final.html:100
 msgid "룸메이트"
 msgstr "Roommate allowed"
 
-#: templates/contract/create_final.html:90
-msgid "불가"
-msgstr "Not Allowed"
-
-#: templates/contract/create_final.html:90
+#: templates/contract/create_final.html:101
 msgid "허용"
 msgstr "Allowed"
 
-#: templates/contract/create_final.html:97
+#: templates/contract/create_final.html:101
+msgid "불가"
+msgstr "Not Allowed"
+
+#: templates/contract/create_final.html:108 templates/contract/edit.html:95
 msgid "옵션"
 msgstr "Options"
 
-#: templates/contract/create_final.html:109
+#: templates/contract/create_final.html:120
 msgid "선택된 옵션이 없습니다."
 msgstr "No options selected."
 
-#: templates/contract/create_final.html:116
-#: templates/contract/create_step3.html:118 templates/contract/edit.html:163
+#: templates/contract/create_final.html:127
+#: templates/contract/create_step3.html:118
 msgid "사진 업로드"
 msgstr "Upload Photos"
 
-#: templates/contract/create_final.html:126
-#: templates/contract/create_step3.html:127
+#: templates/contract/create_final.html:137
+#: templates/contract/create_step3.html:127 templates/contract/edit.html:172
 msgid "PNG, JPG, JPEG, GIF (최대 5MB)"
 msgstr "PNG, JPG, JPEG, GIF (Max 5MB)"
 
-#: templates/contract/create_final.html:135
+#: templates/contract/create_final.html:149
+#: templates/contract/create_final.html:154
+msgid "업로드된 사진"
+msgstr ""
+
+#: templates/contract/create_final.html:164
 #: templates/contract/create_step2.html:96
-#: templates/contract/create_step3.html:147
+#: templates/contract/create_step3.html:153
 msgid "이전 단계"
 msgstr "Previous Step"
 
-#: templates/contract/create_final.html:155
-#: templates/contract/create_step3.html:204
+#: templates/contract/create_final.html:184
+#: templates/contract/create_step3.html:210
 msgid "파일 크기는 5MB를 초과할 수 없습니다."
 msgstr "File size cannot exceed 5MB."
 
-#: templates/contract/create_final.html:160
-#: templates/contract/create_step3.html:209
+#: templates/contract/create_final.html:189
+#: templates/contract/create_step3.html:215
 msgid "이미지 파일만 업로드 가능합니다."
 msgstr "Only image files can be uploaded."
 
-#: templates/contract/create_final.html:169
-#: templates/contract/create_step3.html:170
+#: templates/contract/create_final.html:198
+#: templates/contract/create_step3.html:176
 msgid "미리보기 이미지"
 msgstr "Preview Image"
 
 #: templates/contract/create_step2.html:45
-msgid "방 개수 *"
-msgstr "Number of Rooms *"
+#, fuzzy
+msgid "방 개수(Studio 시 0개) *"
+msgstr "Number of Rooms(For Studio: 0)"
 
 #: templates/contract/create_step2.html:48
 msgid "예: 2"
@@ -245,7 +355,7 @@ msgstr "Contract start date *"
 msgid "계약 종료일 *"
 msgstr "Contract end date *"
 
-#: templates/contract/create_step2.html:88 templates/contract/edit.html:97
+#: templates/contract/create_step2.html:88
 msgid "룸메이트 허용"
 msgstr "Roommate allowed"
 
@@ -254,7 +364,7 @@ msgid "옵션 선택"
 msgstr "Select Options"
 
 #: templates/contract/create_step3.html:54
-#: templates/contract/create_step3.html:55 templates/contract/edit.html:113
+#: templates/contract/create_step3.html:55
 msgid "에어컨"
 msgstr "Air Conditioner"
 
@@ -262,61 +372,61 @@ msgstr "Air Conditioner"
 msgid "세탁기"
 msgstr "Washing Machine"
 
-#: templates/contract/create_step3.html:59 templates/contract/edit.html:117
+#: templates/contract/create_step3.html:59
 msgid "세탁기, 건조기"
 msgstr "Washer, Dryer"
 
 #: templates/contract/create_step3.html:62
-#: templates/contract/create_step3.html:63 templates/contract/edit.html:121
+#: templates/contract/create_step3.html:63
 msgid "냉장고"
 msgstr "Refrigerator"
 
 #: templates/contract/create_step3.html:66
-#: templates/contract/create_step3.html:67 templates/contract/edit.html:125
+#: templates/contract/create_step3.html:67
 msgid "전자레인지"
 msgstr "Microwave"
 
 #: templates/contract/create_step3.html:70
-#: templates/contract/create_step3.html:71 templates/contract/edit.html:129
+#: templates/contract/create_step3.html:71
 msgid "TV"
 msgstr "TV"
 
 #: templates/contract/create_step3.html:74
-#: templates/contract/create_step3.html:75 templates/contract/edit.html:133
+#: templates/contract/create_step3.html:75
 msgid "인터넷"
 msgstr "Internet"
 
 #: templates/contract/create_step3.html:78
-#: templates/contract/create_step3.html:79 templates/contract/edit.html:137
+#: templates/contract/create_step3.html:79
 msgid "가구 포함"
 msgstr "Furnished"
 
 #: templates/contract/create_step3.html:82
-#: templates/contract/create_step3.html:83 templates/contract/edit.html:141
+#: templates/contract/create_step3.html:83
 msgid "침대"
 msgstr "Bed"
 
 #: templates/contract/create_step3.html:86
-#: templates/contract/create_step3.html:87 templates/contract/edit.html:145
+#: templates/contract/create_step3.html:87
 msgid "주차장"
 msgstr "Parking Lot"
 
 #: templates/contract/create_step3.html:90
-#: templates/contract/create_step3.html:91 templates/contract/edit.html:149
+#: templates/contract/create_step3.html:91
 msgid "엘리베이터"
 msgstr "Elevator"
 
 #: templates/contract/create_step3.html:94
-#: templates/contract/create_step3.html:95 templates/contract/edit.html:153
+#: templates/contract/create_step3.html:95
 msgid "보안시스템"
 msgstr "Security System"
 
 #: templates/contract/create_step3.html:98
-#: templates/contract/create_step3.html:99 templates/contract/edit.html:157
+#: templates/contract/create_step3.html:99
 msgid "애완동물 가능"
 msgstr "Pets Allowed"
 
-#: templates/contract/create_step3.html:105 templates/contract/detail.html:164
+#: templates/contract/create_step3.html:105 templates/contract/detail.html:167
 msgid "매물 설명"
 msgstr "Property Description"
 
@@ -343,7 +453,17 @@ msgstr "or drag and drop"
 msgid "업로드 중... (0%%)"
 msgstr "Uploading... (0%%)"
 
-#: templates/contract/create_step3.html:150
+#: templates/contract/create_step3.html:146 templates/contract/edit.html:143
+#, fuzzy
+msgid "매물 사진"
+msgstr "Find property"
+
+#: templates/contract/create_step3.html:148
+#, fuzzy
+msgid "최대 10장까지 업로드 가능합니다."
+msgstr "Only image files can be uploaded."
+
+#: templates/contract/create_step3.html:156
 msgid "미리보기 및 완료"
 msgstr "Preview and Complete"
 
@@ -370,7 +490,7 @@ msgstr ""
 "All related data such as photos, options, and likes will be deleted as "
 "well."
 
-#: templates/contract/delete.html:26 templates/contract/detail.html:268
+#: templates/contract/delete.html:26 templates/contract/detail.html:273
 msgid "삭제하기"
 msgstr "Delete"
 
@@ -386,117 +506,140 @@ msgstr "Back to Search Results"
 msgid "이미지가 없습니다"
 msgstr "No images available"
 
+#: templates/contract/detail.html:62
+msgid "계약 기간"
+msgstr "Contract Period"
+
+#: templates/contract/detail.html:67 templates/contract/detail.html:73
+msgid "미정"
+msgstr "Not Decided"
+
 #: templates/contract/detail.html:82
 msgid "방"
 msgstr "Rooms"
 
-#: templates/contract/detail.html:90
+#: templates/contract/detail.html:85
+#: templates/contract/partials/search_results.html:40
+msgid "Studio"
+msgstr ""
+
+#: templates/contract/detail.html:87 templates/contract/detail.html:97
+msgid "개"
+msgstr ""
+
+#: templates/contract/detail.html:96
 msgid "화장실"
 msgstr "Bathrooms"
 
-#: templates/contract/detail.html:107
-msgid "층"
-msgstr "Floor"
-
-#: templates/contract/detail.html:107
+#: templates/contract/detail.html:113
 msgid "정보 없음"
 msgstr "Not available"
 
-#: templates/contract/detail.html:120
+#: templates/contract/detail.html:126
 msgid "룸메이트 여부"
 msgstr "Roommate Policy"
 
-#: templates/contract/detail.html:129
+#: templates/contract/detail.html:135
 msgid "룸메이트 가능"
 msgstr "Roommates Allowed"
 
-#: templates/contract/detail.html:137
+#: templates/contract/detail.html:143
 msgid "룸메이트 불가"
 msgstr "Roommates Not Allowed"
 
-#: templates/contract/detail.html:144
+#: templates/contract/detail.html:150
 msgid "매물 옵션"
 msgstr "Property Options"
 
-#: templates/contract/detail.html:157
+#: templates/contract/detail.html:160
 msgid "등록된 옵션이 없습니다."
 msgstr "No options listed."
 
-#: templates/contract/detail.html:171
+#: templates/contract/detail.html:174
 msgid "위치 정보"
 msgstr "Location Information"
 
-#: templates/contract/detail.html:182 templates/contract/edit.html:176
+#: templates/contract/detail.html:185
 msgid "작성자 정보"
 msgstr "Seller Information"
 
-#: templates/contract/detail.html:262 templates/contract/edit.html:205
+#: templates/contract/detail.html:211
+msgid "이메일"
+msgstr ""
+
+#: templates/contract/detail.html:267 templates/contract/edit.html:186
 msgid "수정하기"
 msgstr "Edit"
 
-#: templates/contract/detail.html:278
+#: templates/contract/detail.html:283
 msgid "유사한 매물"
 msgstr "Similar Properties"
 
-#: templates/contract/detail.html:291
+#: templates/contract/detail.html:296
 msgid "이미지 없음"
 msgstr "No image"
 
-#: templates/contract/edit.html:3 templates/contract/edit.html:18
+#: templates/contract/detail.html:345
+msgid "위치 정보가 없습니다."
+msgstr ""
+
+#: templates/contract/edit.html:3 templates/contract/edit.html:24
 msgid "매물 수정"
 msgstr "Edit Property"
 
-#: templates/contract/edit.html:13
+#: templates/contract/edit.html:19
 msgid "매물 상세로 돌아가기"
 msgstr "Back to Property Detail"
 
-#: templates/contract/edit.html:29
-msgid "건물명"
-msgstr "Building Name"
+#: templates/contract/edit.html:99
+msgid "furnished"
+msgstr ""
 
-#: templates/contract/edit.html:43
-msgid "월세 (USD)"
-msgstr "Monthly Rent (USD)"
+#: templates/contract/edit.html:103
+msgid "parking"
+msgstr ""
 
-#: templates/contract/edit.html:50
-msgid "보증금 (USD)"
-msgstr "Deposit (USD)"
+#: templates/contract/edit.html:107
+msgid "laundry"
+msgstr ""
 
-#: templates/contract/edit.html:64
-msgid "방 수"
-msgstr "Number of Rooms"
+#: templates/contract/edit.html:111
+msgid "ac"
+msgstr ""
 
-#: templates/contract/edit.html:71
-msgid "화장실 수"
-msgstr "Number of Bathrooms"
+#: templates/contract/edit.html:115
+msgid "wifi"
+msgstr ""
 
-#: templates/contract/edit.html:78
-msgid "층"
-msgstr "Floor"
+#: templates/contract/edit.html:119
+msgid "kitchen"
+msgstr ""
 
-#: templates/contract/edit.html:85
-msgid "면적 (평방피트)"
-msgstr "Size (sqft)"
+#: templates/contract/edit.html:123
+msgid "elevator"
+msgstr ""
 
-#: templates/contract/edit.html:102
-msgid "설명"
-msgstr "Description"
+#: templates/contract/edit.html:127
+msgid "pets_allowed"
+msgstr ""
 
-#: templates/contract/edit.html:167
-msgid "사진 추가"
+#: templates/contract/edit.html:134
+#, fuzzy
+msgid "사진 관리"
 msgstr "Add Photos"
 
-#: templates/contract/edit.html:180
-msgid "카카오톡 ID"
-msgstr "KakaoTalk ID"
+#: templates/contract/edit.html:139
+msgid "현재 사진"
+msgstr ""
 
-#: templates/contract/edit.html:187
-msgid "인스타그램 ID"
-msgstr "Instagram ID"
+#: templates/contract/edit.html:149
+msgid "정말 이 사진을 삭제하시겠습니까?"
+msgstr ""
 
-#: templates/contract/edit.html:194
-msgid "전화번호"
-msgstr "Phone Number"
+#: templates/contract/edit.html:164
+#, fuzzy
+msgid "새 사진 추가"
+msgstr "Add Photos"
 
 #: templates/contract/error.html:8
 msgid "오류가 발생했습니다"
@@ -518,7 +661,7 @@ msgstr "Start over from the beginning"
 msgid "매물 검색 - SubHouse"
 msgstr "Search Properties - SubHouse"
 
-#: templates/contract/search.html:7 templates/partials/navigation.html:13
+#: templates/contract/search.html:7 templates/partials/navigation.html:15
 msgid "매물 찾기"
 msgstr "Find property"
 
@@ -618,16 +761,13 @@ msgid "매물이 성공적으로 등록되었습니다."
 msgstr "The property has been successfully registered."
 
 #: templates/contract/success.html:14
-msgid "등록된 매물은"
-msgstr "The registered property"
-
-#: templates/contract/success.html:14
-msgid "홈페이지"
-msgstr "homepage"
-
-#: templates/contract/success.html:14
-msgid "에서 확인하실 수 있습니다."
-msgstr "can be checked at."
+#, python-format
+msgid ""
+"등록된 매물은 <a href=\"%(homepage_link)s\" class=\"text-blue-600 "
+"hover:underline\">홈페이지</a>에서 확인하실 수 있습니다."
+msgstr ""
+"The registered property can be checked on the <a href=\"%(homepage_link)s\" "
+"class=\"text-blue-600 hover:underline\">homepage</a>."
 
 #: templates/contract/success.html:19
 msgid "홈으로 이동"
@@ -653,57 +793,78 @@ msgstr "Rent"
 msgid "Sale"
 msgstr "Sale"
 
-#: templates/contract/partials/search_results.html:38
+#: templates/contract/partials/search_results.html:42
 #, python-format
 msgid "%(num)d Room"
 msgid_plural "%(num)d Rooms"
 msgstr[0] "%(num)d Room"
 msgstr[1] "%(num)d Rooms"
 
-#: templates/contract/partials/search_results.html:44
+#: templates/contract/partials/search_results.html:51
 msgid "View Details"
 msgstr "View Details"
 
-#: templates/contract/partials/search_results.html:64
-#: templates/contract/partials/search_results.html:67
+#: templates/contract/partials/search_results.html:56
+msgid "로그인 후 상세보기"
+msgstr ""
+
+#: templates/contract/partials/search_results.html:77
+#: templates/contract/partials/search_results.html:80
 msgid "Previous"
 msgstr "Previous"
 
-#: templates/contract/partials/search_results.html:98
-#: templates/contract/partials/search_results.html:101
+#: templates/contract/partials/search_results.html:111
+#: templates/contract/partials/search_results.html:114
 msgid "Next"
 msgstr "Next"
 
-#: templates/contract/partials/search_results.html:112
+#: templates/contract/partials/search_results.html:125
 msgid "No search results found"
 msgstr "No search results found"
 
-#: templates/contract/partials/search_results.html:113
+#: templates/contract/partials/search_results.html:126
 msgid "Try changing your search term or adjusting the filters."
 msgstr "Try changing your search term or adjusting the filters."
 
-#: templates/contract/partials/search_results.html:115
+#: templates/contract/partials/search_results.html:128
 msgid "View All Properties"
 msgstr "View All Properties"
 
-#: templates/partials/navigation.html:11
+#: templates/layout/base.html:49
+msgid "&copy; 2025 SubHouse. 모든 권리 보유."
+msgstr ""
+
+#: templates/layout/base.html:51
+msgid ""
+"Subhouse는 단순한 정보 제공 플랫폼으로, 사용자 간의 Sublease(전대차) 거래에 직접 개입하지 않으며, 어떠한 법적 "
+"책임도 지지 않습니다."
+msgstr ""
+
+#: templates/layout/base.html:52
+#, fuzzy
+msgid "모든 거래는 사용자 본인의 책임 하에 이루어지며, Subhouse는 거래로 인한 손해나 분쟁에 대해 책임을 지지 않습니다."
+msgstr ""
+"All legal responsibilities lie with the users. SubHouse holds no "
+"liability."
+
+#: templates/partials/navigation.html:13
 msgid "홈"
 msgstr "Home"
 
 # 네비게이션바
-#: templates/partials/navigation.html:14
+#: templates/partials/navigation.html:16
 msgid "Subhouse 소개"
 msgstr "Subhouse Introduction"
 
-#: templates/partials/navigation.html:34
+#: templates/partials/navigation.html:36
 msgid "로그아웃"
 msgstr "Logout"
 
-#: templates/partials/navigation.html:38
+#: templates/partials/navigation.html:47
 msgid "안녕하세요,"
 msgstr "Hello,"
 
-#: templates/partials/navigation.html:43
+#: templates/partials/navigation.html:53
 msgid "Google로 시작하기"
 msgstr "Google Login"
 
@@ -716,12 +877,8 @@ msgstr "Google Login"
 #~ msgid "전화번호:"
 #~ msgstr "Phone Number:"
 
-#~ msgid "건축년도"
-msgstr "Floor"
-
 #~ msgid "예: 2010"
 #~ msgstr "e.g., 2010"
-
 
 #~ msgid "이메일"
 #~ msgstr "Email"
@@ -729,110 +886,57 @@ msgstr "Floor"
 #~ msgid "개"
 #~ msgstr ""
 
-#: templates/index.html:6
-msgid "SubHouse - 당신의 이상적인 집을 찾아보세요"
-msgstr "SubHouse - Find your ideal home"
+#~ msgid "최근 등록된 매물"
+#~ msgstr "Recently Added Properties"
 
-msgid "당신의 이상적인 집을 찾아보세요"
-msgstr "Find your ideal home"
+#~ msgid "현재 등록된 매물이 없습니다."
+#~ msgstr "No properties currently listed."
 
-msgid "간편하게 매물을 등록하고 찾을 수 있는 SubHouse와 함께하세요"
-msgstr "Join SubHouse to easily post and find listings"
+#~ msgid "첫 매물 등록하기"
+#~ msgstr "Register new property"
 
-msgid "매물 등록하기"
-msgstr "Post Listing"
+#~ msgid "유틸 평균가격 (USD)"
+#~ msgstr "Average utility price (USD)"
 
-msgid "매물 찾아보기"
-msgstr "Browse Listings"
+#~ msgid "방 개수 *"
+#~ msgstr "Number of Rooms *"
 
-msgid "SubHouse에 오신 것을 환영합니다"
-msgstr "Welcome to SubHouse"
+#~ msgid "건물명"
+#~ msgstr "Building Name"
 
-msgid "SubHouse는 퍼듀대학교 학생들을 위한 서브리스(sublease) 매물 공유 플랫폼입니다. 퍼듀 지역에서 방을 찾고 있는 학생이나, 양도하려는 학생 모두 쉽게 매물을 검색하고 등록할 수 있습니다."
-msgstr "SubHouse is a sublease listing platform for Purdue students. Whether you're looking for a place or trying to sublet, you can easily browse and post listings."
+#~ msgid "월세 (USD)"
+#~ msgstr "Monthly Rent (USD)"
 
-msgid "누구나 사용하기 쉽도록 설계된 이 플랫폼은 무료이며 구글 로그인 후 이용하실 수 있습니다. 다만, 아래 주의사항을 꼭 숙지해주세요."
-msgstr "This platform is free and easy to use with Google login. Please read the following notes carefully."
+#~ msgid "화장실 수"
+#~ msgstr "Number of Bathrooms"
 
-msgid "이용 시 주의사항"
-msgstr "Important Notes"
+#~ msgid "면적 (평방피트)"
+#~ msgstr "Size (sqft)"
 
-msgid "SubHouse는 매물 소개 용도로만 사용되어야 하며, 그 외의 용도는 엄격히 금지됩니다."
-msgstr "SubHouse is strictly for listing/viewing sublease properties only. Any other use is prohibited."
+#~ msgid "설명"
+#~ msgstr "Description"
 
-msgid "매물에 대한 자세한 문의는 작성자가 남긴 연락처를 통해 직접 진행해 주세요."
-msgstr "For questions about a property, please contact the listing owner directly via their provided info."
+#~ msgid "카카오톡 ID"
+#~ msgstr "KakaoTalk ID"
 
-msgid "모든 거래에 대한 법적 책임은 이용자 본인에게 있으며, SubHouse는 책임을 지지 않습니다."
-msgstr "All legal responsibilities lie with the users. SubHouse holds no liability."
+#~ msgid "인스타그램 ID"
+#~ msgstr "Instagram ID"
 
-msgid "문의사항이나 피드백이 있으시면 아래 이메일로 연락해주세요."
-msgstr "For questions or feedback, please contact us at the email below."
+#~ msgid "전화번호"
+#~ msgstr "Phone Number"
 
-#: templates/aboutUs.html:3
-msgid "SubHouse - About Us"
-msgstr "SubHouse - About Us"
+#~ msgid "등록된 매물은"
+#~ msgstr "The registered property can be checked at :"
 
-#: templates/aboutUs.html:7
-msgid "About SubHouse"
-msgstr "About SubHouse"
+#~ msgid "홈페이지"
+#~ msgstr "homepage"
 
-#: templates/aboutUs.html:9
-msgid "This project was developed as part of a one-day challenge on June 3rd to create a complete project. Currently, only the MVP (Minimum Viable Product) stage is implemented."
-msgstr "This project was developed as part of a one-day challenge on June 3rd to create a complete project. Currently, only the MVP (Minimum Viable Product) stage is implemented."
+#~ msgid " 에서 확인하실 수 있습니다."
+#~ msgstr " "
 
-#: templates/aboutUs.html:14
-msgid "Meet the Team"
-msgstr "Meet the Team"
+#~ msgid "건축년도"
+#~ msgstr "Floor"
 
-#: templates/aboutUs.html:17
-msgid "이서형"
-msgstr "Seohyung Lee"
+#~ msgid "SubHouse에 오신 것을 환영합니다"
+#~ msgstr "Welcome to SubHouse"
 
-#: templates/aboutUs.html:18
-msgid "GitHub"
-msgstr "GitHub"
-
-#: templates/aboutUs.html:19
-msgid "Role"
-msgstr "Role"
-
-#: templates/aboutUs.html:19
-msgid "Development"
-msgstr "Development"
-
-#: templates/aboutUs.html:21
-msgid "Implemented Features"
-msgstr "Implemented Features"
-
-#: templates/aboutUs.html:23
-msgid "Login/Signup"
-msgstr "Login/Signup"
-
-#: templates/aboutUs.html:24
-msgid "Homepage UI"
-msgstr "Homepage UI"
-
-#: templates/aboutUs.html:25
-msgid "API Integration"
-msgstr "API Integration"
-
-#: templates/aboutUs.html:30
-msgid "윤준수"
-msgstr "Junsu Yoon"
-
-#: templates/aboutUs.html:32
-msgid "Planning & Backend"
-msgstr "Planning & Backend"
-
-#: templates/aboutUs.html:36
-msgid "Database Design and Setup"
-msgstr "Database Design and Setup"
-
-#: templates/aboutUs.html:37
-msgid "Post-MVP Management"
-msgstr "Post-MVP Management"
-
-#: templates/aboutUs.html:44
-msgid "SubHouse is dedicated to providing a simple and effective platform for Purdue students."
-msgstr "SubHouse is dedicated to providing a simple and effective platform for Purdue students."
